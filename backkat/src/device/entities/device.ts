@@ -3,6 +3,6 @@ import { Log } from "./log";
 export interface Device {
 	_id: string
 	name: string
-	amountPerDay: number
+	amount: number
 	logs: Log[]
 }

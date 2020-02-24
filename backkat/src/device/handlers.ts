@@ -28,7 +28,7 @@ export const registerRoutes = (app: Application) => {
 				if (!device) {
 					device = {
 						_id: req.params.id,
-						amountPerDay: 50,
+						amount: 50,
 						logs: [],
 						name: `New Device (${req.params.id})`
 					}
