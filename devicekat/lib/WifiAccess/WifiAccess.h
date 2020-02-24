@@ -2,6 +2,7 @@
 #define WifiAccess_h
 
 #include <WString.h>
+#include <Logger.h>
 
 class WifiAccess
 {
@@ -13,6 +14,7 @@ class WifiAccess
 	private: 
 		String ssid;
 		String password;
+		Logger logger;
 };
 
 #endif

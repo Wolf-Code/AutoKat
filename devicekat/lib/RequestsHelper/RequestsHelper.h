@@ -4,6 +4,8 @@
 #include <ESP8266HTTPClient.h>
 #include <JsonRequestResult.h>
 #include <WString.h>
+#include <Logger.h>
+#include <WiFiClient.h>
 
 class RequestsHelper
 {
@@ -11,8 +13,7 @@ class RequestsHelper
 		JsonRequestResult get(String endpoint, int bufferSize);
 		String serverUrl;
 	private:
-		HTTPClient httpClient;
-		void begin(String endpoint);
+		Logger logger;
 };
 
 #endif

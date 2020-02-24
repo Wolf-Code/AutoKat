@@ -8,8 +8,10 @@ class JsonRequestResult
 		JsonRequestResult(int capacity);
 		~JsonRequestResult();
 		DynamicJsonDocument* document;
-		DeserializationError error;
-		bool success;
+		DeserializationError deserializationError;
+		String statusError;
+		bool requestSuccess;
+		bool deserializeSuccess;
 		int status;
 };
 

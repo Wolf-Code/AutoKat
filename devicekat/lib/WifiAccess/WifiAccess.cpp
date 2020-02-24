@@ -15,6 +15,8 @@ void WifiAccess::connect()
 	{
 		delay(1000);
 	}
+
+	this->logger.debugLine("Connected to wifi at ip: " + WiFi.localIP().toString());
 }
 
 bool WifiAccess::isConnected()

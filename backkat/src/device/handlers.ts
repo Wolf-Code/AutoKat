@@ -19,7 +19,7 @@ export const registerRoutes = (app: Application) => {
 		})
 	)
 
-	app.post(
+	app.get(
 		'/device/:id',
 		useRequestHandler(async (req, res) => {
 			await useDatabase(async db => {

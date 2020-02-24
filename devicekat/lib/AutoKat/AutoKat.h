@@ -3,6 +3,7 @@
 
 #include <WString.h>
 #include <RequestsHelper.h>
+#include <Logger.h>
 
 class AutoKat
 {
@@ -13,6 +14,7 @@ class AutoKat
 		String id;
 		String name;
 		RequestsHelper requestsHelper;
+		Logger logger;
 };
 
 #endif

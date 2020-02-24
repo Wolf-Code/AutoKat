@@ -1,31 +1,44 @@
-#include <WiFiClient.h>
 #include "RequestsHelper.h"
-
-void RequestsHelper::begin(String endPoint)
-{
-	WiFiClient client;
-
-	this->httpClient.begin(client, this->serverUrl + '/' + endPoint);
-}
 
 JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
 {
-	this->begin(endPoint);
+	const String url = this->serverUrl + "/" + endPoint;
+	this->logger.debugLine("beginning get request to " + url);
+
 	JsonRequestResult result(bufferSize);
-	result.status = this->httpClient.GET();
 
-	DynamicJsonDocument doc(bufferSize);
-	result.document = &doc;
+	WiFiClient wifiClient;
+	HTTPClient http;
 
-	if (result.status == 200)
+	if (http.begin(wifiClient, url))
 	{
-		result.success = true;
-		const String json = this->httpClient.getString();
-		const DeserializationError deserialized = deserializeJson(*result.document, json);
-		result.error = deserialized;
-	}
+		const int status = http.GET();
+		Serial.println(status);
+		result.status = status;
 
-	this->httpClient.end();
+		if (result.status == HTTP_CODE_OK)
+		{
+			result.requestSuccess = true;
+			const String json = http.getString();
+			this->logger.debugLine(json);
+
+			const DeserializationError deserialized = deserializeJson(*result.document, json);
+			result.deserializationError = deserialized;
+			result.deserializeSuccess = !deserialized;
+		}
+		else
+		{
+			const String error = http.errorToString(status);
+			result.statusError = error;
+			logger.debugLine("failed to get: " + error);
+		}
+
+		http.end();
+	}
+	else
+	{
+		this->logger.debugLine("Failed to begin request");
+	}
 
 	return result;
 }
