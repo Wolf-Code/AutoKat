@@ -2,8 +2,10 @@
 #include <WifiAccess.h>
 #include <AutoKat.h>
 #include <Logger.h>
+#include <ConfigurationServer.h>
 
 Logger logger;
+ConfigurationServer configServer;
 AutoKat autoKat("http://192.168.1.61:8080");
 WifiAccess wifi("BimBamBommel", "WatEenEllende");
 
@@ -12,7 +14,7 @@ void setup() {
 	logger.waitForInput();
 	logger.writeLine("Connecting wifi");
 	wifi.connect();
-
+	configServer.start();
 }
 
 void loop() {
