@@ -5,9 +5,9 @@
 #include <ConfigurationServer.h>
 
 Logger logger;
-ConfigurationServer configServer;
-AutoKat autoKat("http://192.168.1.61:8080");
 WifiAccess wifi("BimBamBommel", "WatEenEllende");
+AutoKat autoKat("http://192.168.1.61:8080");
+ConfigurationServer configServer;
 
 void setup() {
 	delay(10000);
@@ -15,6 +15,10 @@ void setup() {
 	logger.writeLine("Connecting wifi");
 	wifi.connect();
 	configServer.start();
+
+	const String macAddress = wifi.getMacAddress();
+	logger.writeLine("Registering device with mac address " + macAddress);
+	autoKat.registerDevice(macAddress);
 }
 
 void loop() {
@@ -23,8 +27,6 @@ void loop() {
 		return;
 	}
 
-	const String macAddress = wifi.getMacAddress();
-	logger.writeLine("Registering device with mac address " + macAddress);
-	autoKat.registerDevice(macAddress);
+
 	delay(1000);
 }

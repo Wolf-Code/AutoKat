@@ -11,9 +11,11 @@ class RequestsHelper
 {
 	public:
 		JsonRequestResult get(String endpoint, int bufferSize);
+		JsonRequestResult post(String endpoint, int capacity, JsonObject& object);
+		JsonObject createJsonObject(const size_t capacity);
 		String serverUrl;
 	private:
-		Logger logger;
+		String getUrlToEndPoint(String endpoint);
 };
 
 #endif

@@ -10,7 +10,7 @@ class WifiAccess
 		WifiAccess(String ssid, String password);
 		bool isConnected();
 		void connect();
-		String getMacAddress();
+		static String getMacAddress();
 	private: 
 		String ssid;
 		String password;
