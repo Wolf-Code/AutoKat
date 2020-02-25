@@ -1,8 +1,8 @@
 import { Application } from 'express'
-import { useDatabase, collections } from '../data/database'
+import { useDatabase, collections } from '../../data/database'
 import { Animal } from './entities/animal'
-import { Logger } from '../logging/logger'
-import { useRequestHandler } from '../utils/request-handler'
+import { Logger } from '../../logging/logger'
+import { useRequestHandler } from '../../utils/request-handler'
 
 export const registerRoutes = async (app: Application) => {
 	app.get(

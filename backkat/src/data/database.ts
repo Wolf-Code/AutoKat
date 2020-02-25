@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection } from 'mongodb'
-import { Logger } from '../logging/logger'
+import { Logger } from '../core/logging/logger'
 
 export const useDatabase = async (callback: (database: Db, client: MongoClient) => void) => {
 	const connectionString = `${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
@@ -28,5 +28,6 @@ export const useDatabase = async (callback: (database: Db, client: MongoClient) 
 
 export const collections = {
 	animals: 'animals',
-	devices: 'devices'
+	devices: 'devices',
+	devicelogs: 'devicelogs'
 }

@@ -6,7 +6,7 @@ import { registerRoutes } from './handlers'
 dotenv.config()
 
 const app = express()
-app.use(bodyParser.json());
+app.use(express.json());
 const port = process.env.SERVER_PORT
 
 registerRoutes(app)

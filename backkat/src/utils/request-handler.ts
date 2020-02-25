@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Logger } from '../logging/logger'
+import { Logger } from '../core/logging/logger'
 
 export const useRequestHandler = (callback: (req: Request, res: Response) => void): ((req: Request, res: Response) => void) => {
 	return async (request, response) => {

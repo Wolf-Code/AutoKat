@@ -1,8 +1,8 @@
 import { Application } from 'express'
-import { useRequestHandler } from '../utils/request-handler'
-import { useDatabase, collections } from '../data/database'
+import { useRequestHandler } from '../../utils/request-handler'
+import { useDatabase, collections } from '../../data/database'
 import { Device } from './entities/device'
-import { Log } from './entities/log'
+import { FoodLog } from './entities/foodlog'
 
 export const registerRoutes = (app: Application) => {
 	app.get(
@@ -43,7 +43,7 @@ export const registerRoutes = (app: Application) => {
 	)
 
 	app.get(
-		'/device/:id/log',
+		'/device/:id/log-food',
 		useRequestHandler(async (req, res) => {
 			await useDatabase(async db => {
 				const device = await db.collection<Device>(collections.devices).findOne({ _id: req.params.id })
@@ -57,9 +57,9 @@ export const registerRoutes = (app: Application) => {
 	)
 
 	app.post(
-		'/device/:id/log',
+		'/device/:id/log-food',
 		useRequestHandler(async (req, res) => {
-			const log = req.body as Log
+			const log = req.body as FoodLog
 			if (!log) {
 				throw 'Invalid log provided'
 			}

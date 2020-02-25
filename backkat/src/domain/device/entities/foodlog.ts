@@ -1,4 +1,4 @@
-export interface Log {
+export interface FoodLog {
 	amount: number
 	moment: Date | undefined
 }
