@@ -1,28 +1,7 @@
 #include "WifiAccess.h"
 #include <ESP8266WiFi.h>
 
-WifiAccess::WifiAccess(String ssid, String password)
-{
-	this->ssid = ssid;
-	this->password = password;
-}
-
-void WifiAccess::connect()
-{
-	WiFi.begin(this->ssid, this->password);
-	
-	while (!this->isConnected())
-	{
-		delay(1000);
-	}
-
-	this->logger.debugLine("Connected to wifi at ip: " + WiFi.localIP().toString());
-}
-
-bool WifiAccess::isConnected()
-{
-	return WiFi.status() == WL_CONNECTED;
-}
+String WifiAccess::macAddress;
 
 String macToStr(const uint8_t *mac)
 {
@@ -36,7 +15,7 @@ String macToStr(const uint8_t *mac)
 	return result;
 }
 
-String WifiAccess::getMacAddress()
+String createMacAddressString()
 {
 	String clientMac = "";
 	unsigned char mac[6];
@@ -44,4 +23,27 @@ String WifiAccess::getMacAddress()
 	clientMac += macToStr(mac);
 
 	return clientMac;
+}
+
+void WifiAccess::connect(String ssid, String password)
+{
+	WiFi.begin(ssid, password);
+
+	while (!WifiAccess::isConnected())
+	{
+		delay(500);
+	}
+
+	WifiAccess::macAddress = createMacAddressString();
+}
+
+bool WifiAccess::isConnected()
+{
+	return WiFi.status() == WL_CONNECTED;
+}
+
+
+String WifiAccess::getMacAddress()
+{
+	return WifiAccess::macAddress;
 }

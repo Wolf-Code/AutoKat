@@ -9,12 +9,13 @@
 class RequestsHelper
 {
 	public:
-		JsonRequestResult get(String endpoint, int bufferSize);
-		JsonRequestResult post(String endpoint, int responseCapacity, JsonDocument payload);
-		JsonRequestResult post(String endpoint, JsonDocument payload);
-		String serverUrl;
+		static JsonRequestResult get(String endpoint, int bufferSize);
+		static JsonRequestResult post(String endpoint, int responseCapacity, JsonDocument payload);
+		static JsonRequestResult post(String endpoint, JsonDocument payload);
+		static void initialize(String serverUrl);
 	private:
-		String getUrlToEndPoint(String endpoint);
+		static String getUrlToEndPoint(String endpoint);
+		static String serverUrl;
 };
 
 #endif

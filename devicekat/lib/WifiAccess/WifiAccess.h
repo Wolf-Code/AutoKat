@@ -2,19 +2,15 @@
 #define WifiAccess_h
 
 #include <WString.h>
-#include <Logger.h>
 
 class WifiAccess
 {
 	public:
-		WifiAccess(String ssid, String password);
-		bool isConnected();
-		void connect();
+		static bool isConnected();
+		static void connect(String ssid, String password);
 		static String getMacAddress();
 	private: 
-		String ssid;
-		String password;
-		Logger logger;
+		static String macAddress;
 };
 
 #endif

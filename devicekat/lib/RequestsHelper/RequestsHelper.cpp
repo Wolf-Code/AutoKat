@@ -1,14 +1,16 @@
 #include "RequestsHelper.h"
 
+String RequestsHelper::serverUrl;
+
 String RequestsHelper::getUrlToEndPoint(String endpoint)
 {
-	const String url = this->serverUrl + "/" + endpoint;
+	const String url = serverUrl + "/" + endpoint;
 	return url;
 }
 
 JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
 {
-	const String url = this->getUrlToEndPoint(endPoint);
+	const String url = RequestsHelper::getUrlToEndPoint(endPoint);
 
 	JsonRequestResult result(bufferSize);
 
@@ -18,7 +20,6 @@ JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
 	if (http.begin(wifiClient, url))
 	{
 		const int status = http.GET();
-		Serial.println(status);
 		result.status = status;
 
 		if (result.status == HTTP_CODE_OK)
@@ -45,7 +46,7 @@ JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
 
 JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonDocument payload)
 {
-	const String url = this->getUrlToEndPoint(endPoint);
+	const String url = RequestsHelper::getUrlToEndPoint(endPoint);
 
 	JsonRequestResult result(bufferSize);
 
@@ -83,7 +84,7 @@ JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonDocu
 
 JsonRequestResult RequestsHelper::post(String endPoint, JsonDocument payload)
 {
-	const String url = this->getUrlToEndPoint(endPoint);
+	const String url = RequestsHelper::getUrlToEndPoint(endPoint);
 
 	JsonRequestResult result(0);
 
@@ -114,4 +115,9 @@ JsonRequestResult RequestsHelper::post(String endPoint, JsonDocument payload)
 	}
 
 	return result;
+}
+
+void RequestsHelper::initialize(String url)
+{
+	serverUrl = url;
 }

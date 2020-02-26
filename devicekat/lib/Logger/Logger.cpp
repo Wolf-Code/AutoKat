@@ -1,22 +1,19 @@
 #include <Arduino.h>
 #include <WifiAccess.h>
-#include "Logger.h"
 #include <ArduinoJson.h>
 #include <RequestsHelper.h>
+#include "Logger.h"
 
-Logger::Logger()
-{
-	Serial.begin(115200);
-}
+String Logger::macAddress;
 
 void Logger::debugLine(String line)
 {
-	this->log(line, "DEBUG");
+	Logger::log(line, "DEBUG");
 }
 
 void Logger::writeLine(String line)
 {
-	this->log(line, "INFO");
+	Logger::log(line, "INFO");
 }
 
 void Logger::log(String line, String level)
@@ -28,8 +25,8 @@ void Logger::log(String line, String level)
 	object["message"] = line.c_str();
 	object["level"] = level.c_str();
 
-	const String endpoint = "log/" + this->macAddress;
-	const JsonRequestResult result = this->requestsHelper.post(endpoint, object);
+	const String endpoint = "log/" + Logger::macAddress;
+	const JsonRequestResult result = RequestsHelper::post(endpoint, object);
 
 	if (!result.requestSuccess)
 	{
@@ -40,7 +37,6 @@ void Logger::log(String line, String level)
 
 void Logger::waitForInput()
 {
-	Serial.println("Hit a key to start");
 	while (Serial.available() == 0)
 	{
 	}
@@ -48,5 +44,6 @@ void Logger::waitForInput()
 
 void Logger::initialize()
 {
-	this->macAddress = WifiAccess::getMacAddress();
+	Serial.begin(115200);
+	Logger::macAddress = WifiAccess::getMacAddress();
 }

@@ -2,20 +2,17 @@
 #define Logger_h
 
 #include <WString.h>
-#include <RequestsHelper.h>
 
 class Logger
 {
 	public:
-		Logger();
-		void writeLine(String line);
-		void debugLine(String line);
-		void waitForInput();
-		void initialize();
+		static void writeLine(String line);
+		static void debugLine(String line);
+		static void waitForInput();
+		static void initialize();
 	private:
-		RequestsHelper requestsHelper;
-		String macAddress;
-		void log(String line, String level);
+		static String macAddress;
+		static void log(String line, String level);
 };
 
 #endif
