@@ -12,6 +12,7 @@ void AutoKat::registerDevice(String id)
 	const int capacity = JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(4) + 80;
 	const String endpoint = "device/" + id;
 	const JsonRequestResult result = this->requestsHelper.get(endpoint, capacity);
+	
 	if (result.requestSuccess && result.deserializeSuccess)
 	{
 		this->logger.debugLine("result success");

@@ -11,7 +11,7 @@ Logger::Logger()
 
 void Logger::debugLine(String line)
 {
-	this->log(line, "DEBUG")
+	this->log(line, "DEBUG");
 }
 
 void Logger::writeLine(String line)
@@ -24,11 +24,12 @@ void Logger::log(String line, String level)
 	Serial.println(level + ": " + line);
 
  	const int capacity = JSON_OBJECT_SIZE(2) + line.length() + level.length();
-	const JsonObject object = this->requestsHelper.createJsonObject(capacity);
-	object["message"] = line;
-	object["level"] = level;
+	DynamicJsonDocument object(capacity);
+	object["message"] = line.c_str();
+	object["level"] = level.c_str();
 
-	this->requestsHelper.post("log/" + this->macAddress, capacity, object);
+	const String endpoint = "log/" + this->macAddress;
+	this->requestsHelper.post(endpoint, object);
 }
 
 void Logger::waitForInput()

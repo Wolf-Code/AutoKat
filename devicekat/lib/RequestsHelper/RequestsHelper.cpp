@@ -38,11 +38,12 @@ JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
 
 		http.end();
 
-		return result;
 	}
+
+	return result;
 }
 
-JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonObject &object)
+JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonDocument payload)
 {
 	const String url = this->getUrlToEndPoint(endPoint);
 
@@ -55,10 +56,8 @@ JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonObje
 	{
 		http.addHeader("Content-Type", "application/json");
 		String jsonRequest;
-		serializeJson(object, jsonRequest);
+		serializeJson(payload, jsonRequest);
 		const int status = http.POST(jsonRequest);
-
-		Serial.println(status);
 		result.status = status;
 
 		if (result.status == HTTP_CODE_OK)
@@ -82,10 +81,37 @@ JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonObje
 	return result;
 }
 
-JsonObject RequestsHelper::createJsonObject(const size_t capacity)
+JsonRequestResult RequestsHelper::post(String endPoint, JsonDocument payload)
 {
-	const StaticJsonDocument<500> doc;
-	JsonObject object = doc.to<JsonObject>();
+	const String url = this->getUrlToEndPoint(endPoint);
 
-	return object;
+	JsonRequestResult result(0);
+
+	WiFiClient wifiClient;
+	HTTPClient http;
+
+	if (http.begin(wifiClient, url))
+	{
+		http.addHeader("Content-Type", "application/json");
+		String jsonRequest;
+		serializeJson(payload, jsonRequest);
+		const int status = http.POST(jsonRequest);
+		result.status = status;
+
+		if (result.status == HTTP_CODE_OK)
+		{
+			result.requestSuccess = true;
+			result.deserializationError = DeserializationError::Ok;
+			result.deserializeSuccess = true;
+		}
+		else
+		{
+			const String error = http.errorToString(status);
+			result.statusError = error;
+		}
+
+		http.end();
+	}
+
+	return result;
 }
