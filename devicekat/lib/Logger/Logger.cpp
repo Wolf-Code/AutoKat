@@ -23,19 +23,27 @@ void Logger::log(String line, String level)
 {
 	Serial.println(level + ": " + line);
 
- 	const int capacity = JSON_OBJECT_SIZE(2) + line.length() + level.length();
+	const int capacity = JSON_OBJECT_SIZE(2) + line.length() + level.length();
 	DynamicJsonDocument object(capacity);
 	object["message"] = line.c_str();
 	object["level"] = level.c_str();
 
 	const String endpoint = "log/" + this->macAddress;
-	this->requestsHelper.post(endpoint, object);
+	const JsonRequestResult result = this->requestsHelper.post(endpoint, object);
+
+	if (!result.requestSuccess)
+	{
+		const String error = "ERROR: Failed to post to " + endpoint + ": " + result.statusError;
+		Serial.println(error);
+	}
 }
 
 void Logger::waitForInput()
 {
-	Serial.println ("Hit a key to start");
-	while(Serial.available() == 0){}
+	Serial.println("Hit a key to start");
+	while (Serial.available() == 0)
+	{
+	}
 }
 
 void Logger::initialize()
