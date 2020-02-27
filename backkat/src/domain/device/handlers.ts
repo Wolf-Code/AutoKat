@@ -6,7 +6,7 @@ import { FoodLog } from './entities/foodlog'
 
 export const registerRoutes = (app: Application) => {
 	app.get(
-		'/device/',
+		'/device',
 		useRequestHandler(async (req, res) => {
 			await useDatabase(async db => {
 				const devices = await db

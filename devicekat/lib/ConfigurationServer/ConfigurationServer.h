@@ -6,11 +6,9 @@
 class ConfigurationServer
 {
     public:
-        void start();
-        ~ConfigurationServer();
-
+        static void start();
     private:
-        AsyncWebServer* server;
+        static AsyncWebServer server;
 };
 
 #endif

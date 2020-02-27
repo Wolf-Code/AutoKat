@@ -30,4 +30,21 @@ export const registerRoutes = (app: Application) => {
 			})
 		})
 	)
+
+	app.get(
+		'/log/:deviceid',
+		useRequestHandler(async (req, res) => {
+			await useDatabase(async db => {
+				const collection = db.collection<DeviceLogs>(collections.devicelogs)
+				let deviceLog = await collection.findOne({ deviceId: req.params.deviceid })
+
+				if (!deviceLog) {
+					res.send([])
+					return
+				}
+
+				res.send(deviceLog.logs)
+			})
+		})
+	)
 }

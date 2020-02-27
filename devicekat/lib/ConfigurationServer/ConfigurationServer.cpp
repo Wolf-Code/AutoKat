@@ -1,5 +1,7 @@
 #include "ConfigurationServer.h"
 
+AsyncWebServer ConfigurationServer::server(80);
+
 String processor(const String &var)
 {
     if (var == "SERVER_URL")
