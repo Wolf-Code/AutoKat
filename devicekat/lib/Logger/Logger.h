@@ -6,6 +6,7 @@
 class Logger
 {
 	public:
+		static void errorLine(String line);
 		static void writeLine(String line);
 		static void debugLine(String line);
 		static void waitForInput();

@@ -13,7 +13,7 @@ void OTAHelper::initialize()
 
 	ArduinoOTA.onEnd([]() {
 		OTAHelper::lastPercentage = 0;
-		Logger::writeLine("Finished OTA update");
+		Logger::writeLine("Finished OTA update, restarting");
 	});
 
 	ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {

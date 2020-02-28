@@ -16,6 +16,11 @@ void Logger::writeLine(String line)
 	Logger::log(line, "INFO");
 }
 
+void Logger::errorLine(String line)
+{
+	Logger::log(line, "ERROR");
+}
+
 void Logger::log(String line, String level)
 {
 	Serial.println(level + ": " + line);
