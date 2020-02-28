@@ -1,10 +1,9 @@
 import { Application } from 'express'
 import { useDatabase, collections } from '../../data/database'
 import { Animal } from './entities/animal'
-import { Logger } from '../../logging/logger'
 import { useRequestHandler } from '../../utils/request-handler'
 
-export const registerRoutes = async (app: Application) => {
+export const registerRoutes = async (app: Application, io: SocketIO.Server) => {
 	app.get(
 		'/animal',
 		useRequestHandler(async (req, res) => {

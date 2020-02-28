@@ -4,7 +4,7 @@ import { useDatabase, collections } from '../../data/database'
 import { Device } from './entities/device'
 import { FoodLog } from './entities/foodlog'
 
-export const registerRoutes = (app: Application) => {
+export const registerRoutes = (app: Application, io: SocketIO.Server) => {
 	app.get(
 		'/device',
 		useRequestHandler(async (req, res) => {

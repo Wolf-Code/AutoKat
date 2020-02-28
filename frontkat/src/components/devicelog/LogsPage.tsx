@@ -5,8 +5,6 @@ import { DeviceLogComponent } from './DeviceLog'
 export const LogsPage = () => {
 	const devices = useDevices()
 
-	console.log(devices)
-
 	return (
 		<>
 			{devices.map(device => (

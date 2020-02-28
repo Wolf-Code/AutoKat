@@ -3,7 +3,7 @@ import { useRequestHandler } from '../../utils/request-handler'
 import { useDatabase, collections } from '../../data/database'
 import { DeviceLogs, DeviceLog } from './entities/devicelog'
 
-export const registerRoutes = (app: Application) => {
+export const registerRoutes = (app: Application, io: SocketIO.Server) => {
 	app.post(
 		'/log/:deviceid',
 		useRequestHandler(async (req, res) => {
@@ -25,6 +25,8 @@ export const registerRoutes = (app: Application) => {
 				deviceLog.logs.push(log)
 
 				await collection.updateOne({ deviceId: deviceLog.deviceId }, { $set: { logs: deviceLog.logs } })
+
+				io.emit(`devicelog.new/${deviceLog.deviceId}`, log)
 
 				res.send(log)
 			})
