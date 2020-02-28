@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useEffect } from 'react'
+import React, { FunctionComponent, useContext, useEffect, useRef } from 'react'
 import socketIOClient from 'socket.io-client'
 
 const SocketContext = React.createContext<SocketIOClient.Socket>(
@@ -17,12 +17,17 @@ export const SocketProvider: FunctionComponent<SocketProviderProps> = props => {
 
 export const useSocket = (event: string, callback: (data: any) => void) => {
 	const socket = useContext(SocketContext)
+	const callbackRef = useRef(callback)
+	const socketRef = useRef(socket)
 
 	useEffect(() => {
-		socket.on(event, callback)
+		const localCallback = callback
+		const localSocket = socketRef.current
+		localSocket.on(event, localCallback)
 
 		return () => {
-			socket.off('event', callback)
+			localSocket.off(event, callbackRef.current)
+			callbackRef.current = localCallback
 		}
-	}, [socket, event, callback])
+	}, [event, callback])
 }

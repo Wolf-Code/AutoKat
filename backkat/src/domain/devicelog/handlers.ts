@@ -45,7 +45,7 @@ export const registerRoutes = (app: Application, io: SocketIO.Server) => {
 					return
 				}
 
-				res.send(deviceLog.logs)
+				res.send(deviceLog.logs.filter(x => x.moment?.getDate() == new Date().getDate()))
 			})
 		})
 	)

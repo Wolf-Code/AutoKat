@@ -13,7 +13,7 @@ export const DeviceLogComponent: FunctionComponent<DeviceLogComponentProps> = pr
 	const { response, isLoading } = useFetch<DeviceLog[]>(`log/${props.id}`)
 	useSocket(`devicelog.new/${props.id}`, data => {
 		const copy = [...logs]
-		copy.push(data as DeviceLog)
+		copy.unshift(data as DeviceLog)
 		setLogs(copy)
 	})
 
@@ -40,7 +40,6 @@ export const DeviceLogComponent: FunctionComponent<DeviceLogComponentProps> = pr
 			</thead>
 			<tbody>
 				{logs
-					?.sort((a, b) => new Date(b.moment).getTime() - new Date(a.moment).getTime())
 					.map((log, index) => (
 						<tr key={index}>
 							<td>{new Date(log.moment).toLocaleString()}</td>

@@ -24,22 +24,16 @@ String processor(const String &var)
 
 void ConfigurationServer::start()
 {
-    this->server = new AsyncWebServer(80);
     // Route for root / web page
-    this->server->on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(SPIFFS, "/index.html", String(), false, processor);
     });
 
-    this->server->on("/save", HTTP_POST, [](AsyncWebServerRequest *request) {
+    server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request) {
         if (request->hasParam("server", true))
         {
         }
     });
 
-    this->server->begin();
-}
-
-ConfigurationServer::~ConfigurationServer()
-{
-    delete this->server;
+    server.begin();
 }
