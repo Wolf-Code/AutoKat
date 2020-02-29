@@ -50,7 +50,8 @@ export const registerRoutes = (app: Application, io: SocketIO.Server) => {
 
 					const logs = deviceLog.logs.filter(x => x.moment?.getDate() == new Date().getDate())
 					logs.sort((a, b) => (b.moment as Date).getTime() - (a.moment as Date).getTime())
-					res.send(logs)
+					const slicedLogs = logs.slice(0, 100)
+					res.send(slicedLogs)
 				} catch (e) {
 					Logger.error(`Failed retrieving device logs for device ${req.params.deviceid}: `, e)
 					res.status(500)

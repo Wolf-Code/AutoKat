@@ -6,9 +6,10 @@
 class AutoKat
 {
 	public:
-		static void registerDevice(String id);
+		static void registerDevice(const String& id);
 		static void initialize();
 		static void loop();
+		static unsigned int getAmountCurrentlyRequired();
 	private:
 		static String id;
 		static String name;

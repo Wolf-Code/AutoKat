@@ -1,4 +1,8 @@
 #include "RequestsHelper.h"
+#include <ESP8266HTTPClient.h>
+#include <Arduino.h>
+#include <Logger.h>
+#include <ArduinoJson.h>
 
 String RequestsHelper::serverUrl;
 
@@ -8,11 +12,9 @@ String RequestsHelper::getUrlToEndPoint(String endpoint)
 	return url;
 }
 
-JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
+void RequestsHelper::get(String endPoint, JsonRequestResult &result)
 {
 	const String url = RequestsHelper::getUrlToEndPoint(endPoint);
-
-	JsonRequestResult result(bufferSize);
 
 	WiFiClient wifiClient;
 	HTTPClient http;
@@ -27,9 +29,10 @@ JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
 			result.requestSuccess = true;
 			const String json = http.getString();
 
-			const DeserializationError deserialized = deserializeJson(*result.document, json);
+			const DeserializationError deserialized = deserializeJson(result.document, json);
 			result.deserializationError = deserialized;
 			result.deserializeSuccess = !deserialized;
+
 		}
 		else
 		{
@@ -38,10 +41,7 @@ JsonRequestResult RequestsHelper::get(String endPoint, int bufferSize)
 		}
 
 		http.end();
-
 	}
-
-	return result;
 }
 
 JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonDocument payload)
@@ -55,7 +55,7 @@ JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonDocu
 
 	if (http.begin(wifiClient, url))
 	{
-		http.addHeader("Content-Type", "application/json");
+		http.addHeader(F("Content-Type"), F("application/json"));
 		String jsonRequest;
 		serializeJson(payload, jsonRequest);
 		const int status = http.POST(jsonRequest);
@@ -66,7 +66,7 @@ JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonDocu
 			result.requestSuccess = true;
 			const String json = http.getString();
 
-			const DeserializationError deserialized = deserializeJson(*result.document, json);
+			const DeserializationError deserialized = deserializeJson(result.document, json);
 			result.deserializationError = deserialized;
 			result.deserializeSuccess = !deserialized;
 		}
@@ -93,7 +93,7 @@ JsonRequestResult RequestsHelper::post(String endPoint, JsonDocument payload)
 
 	if (http.begin(wifiClient, url))
 	{
-		http.addHeader("Content-Type", "application/json");
+		http.addHeader(F("Content-Type"), F("application/json"));
 		String jsonRequest;
 		serializeJson(payload, jsonRequest);
 		const int status = http.POST(jsonRequest);

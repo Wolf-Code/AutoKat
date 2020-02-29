@@ -1,14 +1,16 @@
 #include "JsonRequestResult.h"
 
-JsonRequestResult::JsonRequestResult(int capacity)
+JsonRequestResult::JsonRequestResult(const unsigned int capacity) : document(capacity)
 {
-	this->document = new DynamicJsonDocument(capacity);
+	
 }
 
-JsonRequestResult::~JsonRequestResult()
+JsonObject JsonRequestResult::asObject()
 {
-	if(this->document != nullptr)
-	{
-		delete this->document;
-	}
+	return this->document.as<JsonObject>();
+}
+
+JsonArray JsonRequestResult::asArray()
+{
+	return this->document.as<JsonArray>();
 }

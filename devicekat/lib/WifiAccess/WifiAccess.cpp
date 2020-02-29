@@ -27,14 +27,14 @@ String createMacAddressString()
 	return clientMac;
 }
 
-bool WifiAccess::connect(String ssid, String password)
+bool WifiAccess::connect(const String &ssid, const String &password)
 {
 	WiFi.begin(ssid, password);
 
 	int attempts = 0;
 	while (!WifiAccess::isConnected() && WiFi.status() != WL_CONNECT_FAILED)
 	{
-		if(attempts > 20)
+		if (attempts > 20)
 		{
 			return false;
 		}
@@ -42,7 +42,7 @@ bool WifiAccess::connect(String ssid, String password)
 		attempts++;
 	}
 
-	if(WiFi.status() == WL_CONNECT_FAILED)
+	if (WiFi.status() == WL_CONNECT_FAILED)
 	{
 		return false;
 	}
@@ -54,15 +54,15 @@ bool WifiAccess::connect(String ssid, String password)
 
 void WifiAccess::startAsSoftAP()
 {
-	if (WiFi.softAP("AutoKat", "AutoKat123"))
+	if (WiFi.softAP(F("AutoKat"), F("AutoKat123")))
 	{
 		isAP = true;
-		Serial.println("AP started");
+		Serial.println(F("AP started"));
 		Serial.println(WiFi.softAPIP());
 	}
 	else
 	{
-		Serial.println("AP setup failed");
+		Serial.println(F("AP setup failed"));
 	}
 }
 
@@ -83,5 +83,12 @@ bool WifiAccess::isSoftAP()
 
 void WifiAccess::stopSoftAP()
 {
-	Logger::debugLine(WiFi.softAPdisconnect (true) ? "Disabled AP" : "Failed disabling AP");
+	if (WiFi.softAPdisconnect(true))
+	{
+		Logger::debugLine("Disabled AP");
+	}
+	else
+	{
+		Logger::debugLine("Failed disabling AP");
+	}
 }

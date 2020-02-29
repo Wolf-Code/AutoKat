@@ -58,7 +58,7 @@ void StorageHelper::readLengths(unsigned int &index, unsigned int lengths[])
 	}
 }
 
-void StorageHelper::writeString(unsigned int &index, String string)
+void StorageHelper::writeString(unsigned int &index, String &string)
 {
 	const char *chars = string.c_str();
 	const unsigned int length = string.length();

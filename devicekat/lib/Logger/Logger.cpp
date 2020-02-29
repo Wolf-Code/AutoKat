@@ -1,47 +1,70 @@
+#include "Logger.h"
 #include <Arduino.h>
 #include <WifiAccess.h>
 #include <ArduinoJson.h>
 #include <RequestsHelper.h>
-#include "Logger.h"
 
 String Logger::macAddress;
 
-void Logger::debugLine(String line)
+void Logger::debugLine(const char* format, ...)
 {
-	Logger::log(line, "DEBUG");
+	#if DEBUG
+		va_list args;
+		va_start(args, format);
+		char buffer[1024];
+		vsprintf(buffer, format, args);
+		va_end(args);
+
+		Logger::log(buffer, "DEBUG");
+	#endif
 }
 
-void Logger::writeLine(String line)
+void Logger::errorLine(const unsigned int bufferSize, const char* format, ...)
 {
-	Logger::log(line, "INFO");
+	va_list args;
+	va_start(args, format);
+	char buffer[bufferSize];
+	vsprintf(buffer, format, args);
+	va_end(args);
+
+	Logger::log(buffer, "ERROR");
 }
 
-void Logger::errorLine(String line)
+void Logger::infoLine(const String &line)
 {
-	Logger::log(line, "ERROR");
+	Logger::log(line.c_str(), "INFO");
 }
 
-void Logger::log(String line, String level)
+void Logger::errorLine(const String &line)
 {
-	Serial.println(level + ": " + line);
+	Logger::log(line.c_str(), "ERROR");
+}
+
+void Logger::log(const char* line, const char *level)
+{
+	const unsigned int bufferSize = strlen(line) + strlen(level) + 4;
+	char formatted[bufferSize];
+	sprintf(formatted, "[%s]: %s", level, line);	
+	Serial.println(formatted);
 
 	if (!WifiAccess::isConnected())
 	{
 		return;
 	}
-	
-	const int capacity = JSON_OBJECT_SIZE(2) + line.length() + level.length();
+
+	const int capacity = JSON_OBJECT_SIZE(2) + strlen(line) + strlen(level);
 	DynamicJsonDocument object(capacity);
-	object["message"] = line.c_str();
-	object["level"] = level.c_str();
+	object[F("message")] = line;
+	object[F("level")] = level;
 
 	const String endpoint = "log/" + Logger::macAddress;
 	const JsonRequestResult result = RequestsHelper::post(endpoint, object);
 
 	if (!result.requestSuccess)
 	{
-		const String error = "ERROR: Failed to post to " + endpoint + ": " + result.statusError;
-		Serial.println(error);
+		char buffer[200];
+		sprintf(buffer, "ERROR: Failed to post to %s, %s", endpoint.c_str(), result.statusError.c_str());
+		Serial.println(buffer);
 	}
 }
 

@@ -5,9 +5,10 @@
 class JsonRequestResult
 {
 	public:
-		JsonRequestResult(int capacity);
-		~JsonRequestResult();
-		DynamicJsonDocument* document;
+		JsonRequestResult(const unsigned int capacity);
+		JsonObject asObject();
+		JsonArray asArray();
+		DynamicJsonDocument document;
 		DeserializationError deserializationError;
 		String statusError;
 		bool requestSuccess;
