@@ -4,8 +4,8 @@
 class Framework
 {
 	public:
-		static void initialize();
-		static void loop();
+		static void initialize(void (*pApplicationInitializeFunc)(void));
+		static void loop(void (*pApplicationLoopFunc)(void));
 		static bool canRunMainApplication();
 };
 

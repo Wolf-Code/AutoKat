@@ -6,10 +6,12 @@
 class AutoKat
 {
 	public:
-		void registerDevice(String id);
+		static void registerDevice(String id);
+		static void initialize();
+		static void loop();
 	private:
-		String id;
-		String name;
+		static String id;
+		static String name;
 };
 
 #endif
