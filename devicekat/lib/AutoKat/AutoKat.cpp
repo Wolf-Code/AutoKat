@@ -13,7 +13,9 @@ void AutoKat::initialize()
 	const String macAddress = WifiAccess::getMacAddress();
 	Logger::infoLine("Registering device with mac address " + macAddress);
 	AutoKat::registerDevice(macAddress);
-	TimerHelper::startTimer(60000, []() {
+
+	const unsigned int queryTime = 10 * 60 * 1000;
+	TimerHelper::startTimer(queryTime, []() {
 		const unsigned int currentAmount = AutoKat::getAmountCurrentlyRequired();
 
 		Logger::debugLine("Current amount: %d", currentAmount);

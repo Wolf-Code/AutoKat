@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>AutoKat</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+	</head>
+
+	<body>
+		<h1>AutoKat</h1>
+		<form action="/save" method="POST">
+			<p>
+				SERVER URL:
+				<input name="server" value="%SERVER_URL%" />
+			</p>
+			<p>
+				SSID:
+				<input name="ssid" value="%SSID%" />
+			</p>
+			<p>
+				PASSWORD:
+				<input name="password" value="%PASSWORD%" />
+			</p>
+			<p>
+				<button onclick="save()">Save</button>
+			</p>
+		</form>
+	</body>
+</html>

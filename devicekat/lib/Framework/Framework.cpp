@@ -42,7 +42,7 @@ void startNormally()
 	}
 }
 
-void Framework::initialize(void (*pApplicationInitializeFunc)(void))
+void Framework::initialize(FrameworkInitializeCallback callback)
 {
 	Serial.begin(115200);
 	StorageHelper::initialize();
@@ -54,10 +54,10 @@ void Framework::initialize(void (*pApplicationInitializeFunc)(void))
 	}
 
 	startNormally();
-	pApplicationInitializeFunc();
+	callback();
 }
 
-void Framework::loop(void (*pApplicationLoopFunc)(void))
+void Framework::loop(FrameworkLoopCallback callback)
 {
 	OTAHelper::loop();
 	DeviceHelper::loop();
@@ -69,7 +69,7 @@ void Framework::loop(void (*pApplicationLoopFunc)(void))
 		return;
 	}
 
-	pApplicationLoopFunc();
+	callback();
 }
 
 bool Framework::canRunMainApplication()

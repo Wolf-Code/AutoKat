@@ -6,8 +6,6 @@
 #include <TimerHelper.h>
 #include <Timer.h>
 
-static int counter = 10;
-
 void setup()
 {
 	Framework::initialize(AutoKat::initialize);
