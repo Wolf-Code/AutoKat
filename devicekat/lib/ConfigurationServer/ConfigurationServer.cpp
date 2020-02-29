@@ -35,25 +35,6 @@ void ConfigurationServer::start()
 	server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request) {
 		Logger::debugLine("handling /save");
 
-		int params = request->params();
-		Serial.printf("%d params sent in\n", params);
-		for (int i = 0; i < params; i++)
-		{
-			AsyncWebParameter *p = request->getParam(i);
-			if (p->isFile())
-			{
-				Serial.printf("_FILE[%s]: %s, size: %u", p->name().c_str(), p->value().c_str(), p->size());
-			}
-			else if (p->isPost())
-			{
-				Serial.printf("_POST[%s]: %s", p->name().c_str(), p->value().c_str());
-			}
-			else
-			{
-				Serial.printf("_GET[%s]: %s", p->name().c_str(), p->value().c_str());
-			}
-		}
-
 		StorageData storageData = StorageHelper::getStorageData();
 
 		if (request->hasParam("server", true))
@@ -81,4 +62,26 @@ void ConfigurationServer::start()
 
 	server.begin();
 	Logger::debugLine("Starting configuration server");
+}
+
+void ConfigurationServer::debugAsyncWebServerRequest(AsyncWebServerRequest *request)
+{
+	const int params = request->params();
+	Serial.printf("%d params sent in\n", params);
+	for (int i = 0; i < params; i++)
+	{
+		AsyncWebParameter *p = request->getParam(i);
+		if (p->isFile())
+		{
+			Serial.printf("_FILE[%s]: %s, size: %u\n", p->name().c_str(), p->value().c_str(), p->size());
+		}
+		else if (p->isPost())
+		{
+			Serial.printf("_POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
+		}
+		else
+		{
+			Serial.printf("_GET[%s]: %s\n", p->name().c_str(), p->value().c_str());
+		}
+	}
 }

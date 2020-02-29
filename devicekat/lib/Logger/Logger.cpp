@@ -49,6 +49,6 @@ void Logger::waitForInput()
 
 void Logger::initialize()
 {
-	Serial.begin(115200);
+	//Serial.begin(115200);
 	Logger::macAddress = WifiAccess::getMacAddress();
 }

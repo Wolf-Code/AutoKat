@@ -9,6 +9,7 @@ class ConfigurationServer
         static void start();
     private:
         static AsyncWebServer server;
+		static void debugAsyncWebServerRequest(AsyncWebServerRequest* request);
 };
 
 #endif

@@ -37,11 +37,22 @@ void WifiAccess::connect(String ssid, String password)
 	WifiAccess::macAddress = createMacAddressString();
 }
 
+void WifiAccess::startAsSoftAP()
+{
+	if (WiFi.softAP("AutoKat"))
+	{
+		Serial.println("AP started");
+	}
+	else
+	{
+		Serial.println("AP setup failed");
+	}
+}
+
 bool WifiAccess::isConnected()
 {
 	return WiFi.status() == WL_CONNECTED;
 }
-
 
 String WifiAccess::getMacAddress()
 {

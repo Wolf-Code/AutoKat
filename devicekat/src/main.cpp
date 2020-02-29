@@ -10,36 +10,55 @@
 
 AutoKat autoKat;
 
-void setup()
+void startAsAP()
 {
-	StorageHelper::initialize();
-	WifiAccess::connect("BimBamBommel", "WatEenEllende");
-	RequestsHelper::initialize("http://192.168.1.61:8080");
-	Logger::initialize();
+	Serial.println("Starting as AP");
+	WifiAccess::startAsSoftAP();
 	ConfigurationServer::start();
+	if (!SPIFFS.begin())
+	{
+		Serial.println("An Error has occurred while mounting SPIFFS");
+	}
+}
+
+void startNormally()
+{
+	const StorageData data = StorageHelper::getStorageData();
+	WifiAccess::connect(data.wifiSSID, data.wifiPassword);
+	RequestsHelper::initialize(data.serverUrl);
+	Logger::initialize();
 	OTAHelper::initialize();
+	ConfigurationServer::start();
 
 	if (!SPIFFS.begin())
 	{
 		Logger::errorLine("An Error has occurred while mounting SPIFFS");
 	}
 
-	const StorageData data = StorageHelper::getStorageData();
-	Logger::debugLine("server: " + data.serverUrl);
-	Logger::debugLine("ssid: " + data.wifiSSID);
-	Logger::debugLine("password: " + data.wifiPassword);
-
 	const String macAddress = WifiAccess::getMacAddress();
 	Logger::writeLine("Registering device with mac address " + macAddress);
 	autoKat.registerDevice(macAddress);
 }
 
+void setup()
+{
+	Serial.begin(115200);
+	StorageHelper::initialize();
+	// if (!StorageHelper::hasDataBeenWritten())
+	// {
+	// 	startAsAP();
+	// 	return;
+	// }
+
+	startNormally();
+}
+
 void loop()
 {
+	OTAHelper::handle();
+
 	if (!WifiAccess::isConnected())
 	{
 		return;
 	}
-
-	OTAHelper::handle();
 }

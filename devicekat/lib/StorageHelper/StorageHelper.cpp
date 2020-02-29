@@ -5,76 +5,100 @@ StorageData StorageHelper::data;
 
 void StorageHelper::initialize()
 {
-	StorageData data;
-	int serverUrlEnd = 0;
-	data.serverUrl = readString(0, serverUrlEnd);
+	EEPROM.begin(1024);
 
-	int ssidEnd = 0;
-	data.wifiSSID = readString(serverUrlEnd, ssidEnd);
-
-	int wifiPasswordEnd = 0;
-	data.wifiPassword = readString(ssidEnd, wifiPasswordEnd);
-}
-
-String StorageHelper::readString(int index, int &endedAtIndex)
-{
-	const uint8_t highByte = EEPROM.read(index++);
-	const uint8_t lowByte = EEPROM.read(index++);
-
-	const int length = combineTwoBytesIntoInt(highByte, lowByte);
-	char *chars = new char[length];
-	for (int x = 0; x < length; x++)
+	if (!hasDataBeenWritten())
 	{
-		chars[x] = (char)EEPROM.read(index++);
+		return;
 	}
 
-	endedAtIndex = index;
+	reloadFromEEPROM();
+}
+
+void StorageHelper::reloadFromEEPROM()
+{
+	if (!hasDataBeenWritten())
+	{
+		return;
+	}
+
+	unsigned int index = 0;
+	data.serverUrl = readString(index);
+	data.wifiSSID = readString(index);
+	data.wifiPassword = readString(index);
+}
+
+String StorageHelper::readString(unsigned int &index)
+{
+	unsigned int lengths[2];
+	readLengths(index, lengths);
+	const unsigned int length = lengths[0];
+
+	char chars[length + 1];
+	for (unsigned int x = 0; x < length; x++)
+	{
+		chars[x] = EEPROM.read(index++);
+	}
+	chars[length] = '\0';
 
 	const String finalString = String(chars);
-	delete chars;
 	return finalString;
 }
 
-unsigned int StorageHelper::combineTwoBytesIntoInt(uint8_t high, uint8_t low)
+void StorageHelper::readLengths(unsigned int &index, unsigned int lengths[])
 {
-	int combined = high;
-	combined = combined * 256;
-	combined *= low;
-
-	return combined;
-}
-
-int StorageHelper::writeString(int index, String string)
-{
-	uint8_t high;
-	uint8_t low;
-	decomposeIntToTwoBytes(string.length(), high, low);
-	EEPROM.put(index++, high);
-	EEPROM.put(index++, low);
-
-	for(unsigned int x = 0; x < string.length(); x++)
+	for (int i = 0; i < 2; i++)
 	{
-		EEPROM.put(index++, string[x]);
+		unsigned char *accessor = (unsigned char *)&lengths[i];
+		const unsigned int bytes = sizeof(unsigned int);
+		for (unsigned int x = 0; x < bytes; x++)
+		{
+			accessor[x] = EEPROM.read(index++);
+		}
 	}
-
-	return index;
 }
 
-
-void StorageHelper::decomposeIntToTwoBytes(unsigned int value, uint8_t &high, uint8_t &low)
+void StorageHelper::writeString(unsigned int &index, String string)
 {
-	high = value / 256;
-	low = value % 256;
+	const char *chars = string.c_str();
+	const unsigned int length = string.length();
+	writeLength(index, length);
+
+	for (unsigned int x = 0; x < length; x++)
+	{
+		EEPROM.put(index++, (char)chars[x]);
+	}
 }
 
-void StorageHelper::saveStorageData(StorageData& data)
+void StorageHelper::writeLength(unsigned int &index, unsigned int length)
 {
-	int ended = writeString(0, data.serverUrl);
-	ended = writeString(ended, data.wifiSSID);
-	ended = writeString(ended, data.wifiPassword);
+	EEPROM.put(index, length);
+	index += sizeof(unsigned int);
+	EEPROM.put(index, length);
+	index += sizeof(unsigned int);
+}
+
+void StorageHelper::saveStorageData(StorageData &data)
+{
+	unsigned int index = 0;
+	writeString(index, data.serverUrl);
+	writeString(index, data.wifiSSID);
+	writeString(index, data.wifiPassword);
+	EEPROM.commit();
+
+	StorageHelper::data = data;
 }
 
 StorageData StorageHelper::getStorageData()
 {
 	return data;
+}
+
+bool StorageHelper::hasDataBeenWritten()
+{
+	unsigned int index = 0;
+	unsigned int lengths[2];
+	readLengths(index, lengths);
+
+	return lengths[0] == lengths[1];
 }
