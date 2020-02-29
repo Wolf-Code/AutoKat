@@ -1,33 +1,20 @@
+import { createConnection, Connection, EntityManager, ConnectionOptions, Repository } from 'typeorm'
 import { MongoClient, Db, Collection } from 'mongodb'
 import { Logger } from '../core/logging/logger'
 
-export const useDatabase = async (callback: (database: Db, client: MongoClient) => void) => {
-	const connectionString = `${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`
-	const client = new MongoClient(connectionString, {
-		useUnifiedTopology: true
-	})
+export const useDatabase = async (callback: (connection: Connection) => void) => {
+	try {
+		const connection = await createConnection()
 
-	await client.connect(async err => {
-		if (err) {
-			Logger.error(`Failed connecting to ${connectionString}: ${err}`)
-			throw err
-		}
-
-		const db = client.db()
 		try {
-			await callback(db, client)
+			await callback(connection)
+			connection.close()
 		} catch (error) {
 			Logger.error(error)
 			throw error
 		}
-		finally {
-			client.close()
-		}
-	})
-}
-
-export const collections = {
-	animals: 'animals',
-	devices: 'devices',
-	devicelogs: 'devicelogs'
+	} catch (error) {
+		Logger.error('Failed using database: ', error)
+		throw error
+	}
 }

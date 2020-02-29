@@ -1,5 +1,6 @@
 #include "WifiAccess.h"
 #include <ESP8266WiFi.h>
+#include <Logger.h>
 
 String WifiAccess::macAddress;
 bool WifiAccess::isAP;
@@ -78,4 +79,9 @@ String WifiAccess::getMacAddress()
 bool WifiAccess::isSoftAP()
 {
 	return isAP;
+}
+
+void WifiAccess::stopSoftAP()
+{
+	Logger::debugLine(WiFi.softAPdisconnect (true) ? "Disabled AP" : "Failed disabling AP");
 }

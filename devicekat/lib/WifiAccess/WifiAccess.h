@@ -10,6 +10,7 @@ class WifiAccess
 		static bool isConnected();
 		static bool connect(String ssid, String password);
 		static void startAsSoftAP();
+		static void stopSoftAP();
 		static String getMacAddress();
 	private: 
 		static String macAddress;

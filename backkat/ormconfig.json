@@ -1,0 +1,15 @@
+{
+	"type": "mongodb",
+	"database": "autokat",
+	"host": "vault-tec",
+	"port": 32780,
+	"synchronize": true,
+	"logging": false,
+	"entities": ["src/data/entities/**/*.ts"],
+	"migrations": ["src/data/migration/**/*.ts"],
+	"cli": {
+		"entitiesDir": "src/data/entities",
+		"migrationsDir": "src/data/migrations",
+		"subscribersDir": "src/data/subscribers"
+	}
+}

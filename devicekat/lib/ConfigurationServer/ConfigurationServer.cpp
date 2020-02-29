@@ -9,7 +9,7 @@ AsyncWebServer ConfigurationServer::server(80);
 DNSServer ConfigurationServer::dnsServer;
 const int dnsPort = 53;
 
-String processor(const String &var)
+String indexProcessor(const String &var)
 {
 	const StorageData data = StorageHelper::getStorageData();
 	if (var == "SERVER_URL")
@@ -33,7 +33,7 @@ String processor(const String &var)
 void ConfigurationServer::start()
 {
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-		request->send(SPIFFS, "/index.html", "text/html", false, processor);
+		request->send(SPIFFS, "/index.html", "text/html", false, indexProcessor);
 	});
 
 	server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -57,7 +57,7 @@ void ConfigurationServer::start()
 		}
 
 		StorageHelper::saveStorageData(storageData);
-		request->send(200, "text/plain", "Settings saved! Restarting AutoKat");
+		request->send(SPIFFS, "/success-go-back.html", "text/html");
 		DeviceHelper::restart();
 	});
 
