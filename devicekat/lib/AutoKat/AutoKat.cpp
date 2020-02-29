@@ -3,6 +3,7 @@
 #include <JsonRequestResult.h>
 #include <RequestsHelper.h>
 #include <WifiAccess.h>
+#include <TimerHelper.h>
 
 String AutoKat::id;
 String AutoKat::name;
@@ -12,14 +13,18 @@ void AutoKat::initialize()
 	const String macAddress = WifiAccess::getMacAddress();
 	Logger::infoLine("Registering device with mac address " + macAddress);
 	AutoKat::registerDevice(macAddress);
+	TimerHelper::startTimer(60000, []() {
+		const unsigned int currentAmount = AutoKat::getAmountCurrentlyRequired();
+
+		Logger::debugLine("Current amount: %d", currentAmount);
+
+		return false;
+	});
 }
 
 void AutoKat::loop()
 {
-	delay(5000);
-	const unsigned int currentAmount = AutoKat::getAmountCurrentlyRequired();
 
-	Logger::debugLine("Current amount: %d", currentAmount);
 }
 
 void AutoKat::registerDevice(const String &id)

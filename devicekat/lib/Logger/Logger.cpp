@@ -63,7 +63,7 @@ void Logger::log(const char* line, const char *level)
 	if (!result.requestSuccess)
 	{
 		char buffer[200];
-		sprintf(buffer, "ERROR: Failed to post to %s, %s", endpoint.c_str(), result.statusError.c_str());
+		sprintf(buffer, "ERROR: Failed to log to %s, %s", endpoint.c_str(), result.statusError.c_str());
 		Serial.println(buffer);
 	}
 }

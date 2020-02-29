@@ -8,6 +8,7 @@
 #include <StorageHelper.h>
 #include <StorageData.h>
 #include <RequestsHelper.h>
+#include <TimerHelper.h>
 
 void startAsAP()
 {
@@ -45,6 +46,7 @@ void Framework::initialize(void (*pApplicationInitializeFunc)(void))
 {
 	Serial.begin(115200);
 	StorageHelper::initialize();
+	TimerHelper::initialize();
 	if (!StorageHelper::hasDataBeenWritten())
 	{
 		startAsAP();
@@ -60,6 +62,7 @@ void Framework::loop(void (*pApplicationLoopFunc)(void))
 	OTAHelper::loop();
 	DeviceHelper::loop();
 	ConfigurationServer::loop();
+	TimerHelper::loop();
 
 	if (!WifiAccess::isConnected())
 	{

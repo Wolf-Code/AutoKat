@@ -2,6 +2,7 @@
 #define AutoKat_h
 
 #include <WString.h>
+#include <Timer.h>
 
 class AutoKat
 {
@@ -13,6 +14,7 @@ class AutoKat
 	private:
 		static String id;
 		static String name;
+		static Timer queryTimer;
 };
 
 #endif
