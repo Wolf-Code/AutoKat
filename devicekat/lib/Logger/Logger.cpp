@@ -25,6 +25,11 @@ void Logger::log(String line, String level)
 {
 	Serial.println(level + ": " + line);
 
+	if (!WifiAccess::isConnected())
+	{
+		return;
+	}
+	
 	const int capacity = JSON_OBJECT_SIZE(2) + line.length() + level.length();
 	DynamicJsonDocument object(capacity);
 	object["message"] = line.c_str();

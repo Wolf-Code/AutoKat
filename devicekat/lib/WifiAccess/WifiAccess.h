@@ -6,12 +6,14 @@
 class WifiAccess
 {
 	public:
+		static bool isSoftAP();
 		static bool isConnected();
-		static void connect(String ssid, String password);
+		static bool connect(String ssid, String password);
 		static void startAsSoftAP();
 		static String getMacAddress();
 	private: 
 		static String macAddress;
+		static bool isAP;
 };
 
 #endif

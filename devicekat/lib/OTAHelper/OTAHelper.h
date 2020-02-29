@@ -5,7 +5,7 @@ class OTAHelper
 {
 	public:
 		static void initialize();
-		static void handle();
+		static void loop();
 	private: 
 		static int lastPercentage;
 };

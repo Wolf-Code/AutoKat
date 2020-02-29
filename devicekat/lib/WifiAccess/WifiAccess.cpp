@@ -2,6 +2,7 @@
 #include <ESP8266WiFi.h>
 
 String WifiAccess::macAddress;
+bool WifiAccess::isAP;
 
 String macToStr(const uint8_t *mac)
 {
@@ -25,23 +26,38 @@ String createMacAddressString()
 	return clientMac;
 }
 
-void WifiAccess::connect(String ssid, String password)
+bool WifiAccess::connect(String ssid, String password)
 {
 	WiFi.begin(ssid, password);
 
-	while (!WifiAccess::isConnected())
+	int attempts = 0;
+	while (!WifiAccess::isConnected() && WiFi.status() != WL_CONNECT_FAILED)
 	{
+		if(attempts > 20)
+		{
+			return false;
+		}
 		delay(500);
+		attempts++;
 	}
 
+	if(WiFi.status() == WL_CONNECT_FAILED)
+	{
+		return false;
+	}
+
+	isAP = false;
 	WifiAccess::macAddress = createMacAddressString();
+	return true;
 }
 
 void WifiAccess::startAsSoftAP()
 {
-	if (WiFi.softAP("AutoKat"))
+	if (WiFi.softAP("AutoKat", "AutoKat123"))
 	{
+		isAP = true;
 		Serial.println("AP started");
+		Serial.println(WiFi.softAPIP());
 	}
 	else
 	{
@@ -57,4 +73,9 @@ bool WifiAccess::isConnected()
 String WifiAccess::getMacAddress()
 {
 	return WifiAccess::macAddress;
+}
+
+bool WifiAccess::isSoftAP()
+{
+	return isAP;
 }

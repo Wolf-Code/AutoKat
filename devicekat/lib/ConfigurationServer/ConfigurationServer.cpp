@@ -1,9 +1,13 @@
+#include "ConfigurationServer.h"
+#include <WifiAccess.h>
 #include <Logger.h>
 #include <StorageHelper.h>
 #include <StorageData.h>
-#include "ConfigurationServer.h"
+#include <DeviceHelper.h>
 
 AsyncWebServer ConfigurationServer::server(80);
+DNSServer ConfigurationServer::dnsServer;
+const int dnsPort = 53;
 
 String processor(const String &var)
 {
@@ -53,7 +57,8 @@ void ConfigurationServer::start()
 		}
 
 		StorageHelper::saveStorageData(storageData);
-		request->redirect("/");
+		request->send(200, "text/plain", "Settings saved! Restarting AutoKat");
+		DeviceHelper::restart();
 	});
 
 	server.onNotFound([](AsyncWebServerRequest *request) {
@@ -61,6 +66,10 @@ void ConfigurationServer::start()
 	});
 
 	server.begin();
+	if (WifiAccess::isSoftAP())
+	{
+		dnsServer.start(dnsPort, "*", WiFi.softAPIP());
+	}
 	Logger::debugLine("Starting configuration server");
 }
 
@@ -83,5 +92,13 @@ void ConfigurationServer::debugAsyncWebServerRequest(AsyncWebServerRequest *requ
 		{
 			Serial.printf("_GET[%s]: %s\n", p->name().c_str(), p->value().c_str());
 		}
+	}
+}
+
+void ConfigurationServer::loop()
+{
+	if (WifiAccess::isSoftAP())
+	{
+		dnsServer.processNextRequest();
 	}
 }

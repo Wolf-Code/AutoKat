@@ -44,7 +44,7 @@ void OTAHelper::initialize()
 	ArduinoOTA.begin();
 }
 
-void OTAHelper::handle()
+void OTAHelper::loop()
 {
 	ArduinoOTA.handle();
 }
