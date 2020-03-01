@@ -8,6 +8,8 @@
 AsyncWebServer ConfigurationServer::server(80);
 DNSServer ConfigurationServer::dnsServer;
 const int dnsPort = 53;
+const char htmlIndex[] PROGMEM = "<!doctypehtml><title>AutoKat</title><meta name=\"viewport\"content=\"width=device-width,initial-scale=1\"><div class=\"container\"><h1>AutoKat</h1><form action=\"/save\"method=\"POST\"><p>SERVER URL: <input name=\"server\"value=\"%SERVER_URL%\"><p>SSID: <input name=\"ssid\"value=\"%SSID%\"><p>PASSWORD: <input name=\"password\"value=\"%PASSWORD%\"></p><button type=\"submit\">Save</button></form></div>";
+const char htmlSuccess[] PROGMEM = "<div class=\"container\">Success!<p id=\"reloader\"></p><a href=\"/\">Go back now</a></div><script>let count=5const callback=()=>{document.getElementById('reloader').innerHTML='Reloading page in ' + count + ' seconds..'count--if (count < 0){window.location.replace('/')}}setInterval(callback, 1000)callback()</script>";
 
 String indexProcessor(const String &var)
 {
@@ -33,7 +35,7 @@ String indexProcessor(const String &var)
 void ConfigurationServer::start()
 {
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-		request->send(SPIFFS, "/pages/index.html", "text/html", false, indexProcessor);
+		request->send_P(200, "text/html", htmlIndex, indexProcessor);
 	});
 
 	server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -57,12 +59,12 @@ void ConfigurationServer::start()
 		}
 
 		StorageHelper::saveStorageData(storageData);
-		request->send(SPIFFS, "/pages/success.html", "text/html");
+		request->send(200, "text/html", htmlSuccess);
 		DeviceHelper::restart();
 	});
 
-	server.serveStatic("/scripts.js", SPIFFS, "/scripts.js");
-	server.serveStatic("/styles.css", SPIFFS, "/styles.css");
+	// server.serveStatic("/scripts.js", SPIFFS, "/scripts.js");
+	// server.serveStatic("/styles.css", SPIFFS, "/styles.css");
 
 	server.onNotFound([](AsyncWebServerRequest *request) {
 		request->send(404, "text/plain", "Die is er niet vriend");

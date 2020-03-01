@@ -1,11 +1,1 @@
-<div class="container">Success!<p id="reloader"></p><a href="/">Go back now</a></div><script>let count = 5
-	const callback = () => {
-		document.getElementById('reloader').innerHTML = 'Reloading page in ' + count + ' seconds..'
-		count--
-		if (count < 0) {
-			window.location.replace('/')
-		}
-	}
-
-	setInterval(callback, 1000)
-	callback()</script>
+<div class="container">Success!<p id="reloader"></p><a href="/">Go back now</a></div><script>let count=5const callback=()=>{document.getElementById('reloader').innerHTML='Reloading page in ' + count + ' seconds..'count--if (count < 0){window.location.replace('/')}}setInterval(callback, 1000)callback()</script>
