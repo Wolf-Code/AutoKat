@@ -8,6 +8,7 @@ export const useRequestHandler = (callback: (req: Request, res: Response) => voi
 			await callback(request, response)
 		} catch (error) {
 			response.status(500)
+			console.log(error)
 			response.end(error)
 		}
 	}

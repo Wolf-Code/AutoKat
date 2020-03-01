@@ -33,7 +33,7 @@ String indexProcessor(const String &var)
 void ConfigurationServer::start()
 {
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-		request->send(SPIFFS, "/index.html", "text/html", false, indexProcessor);
+		request->send(SPIFFS, "/pages/index.html", "text/html", false, indexProcessor);
 	});
 
 	server.on("/save", HTTP_POST, [](AsyncWebServerRequest *request) {
@@ -57,9 +57,12 @@ void ConfigurationServer::start()
 		}
 
 		StorageHelper::saveStorageData(storageData);
-		request->send(SPIFFS, "/success-go-back.html", "text/html");
+		request->send(SPIFFS, "/pages/success.html", "text/html");
 		DeviceHelper::restart();
 	});
+
+	server.serveStatic("/scripts.js", SPIFFS, "/scripts.js");
+	server.serveStatic("/styles.css", SPIFFS, "/styles.css");
 
 	server.onNotFound([](AsyncWebServerRequest *request) {
 		request->send(404, "text/plain", "Die is er niet vriend");
