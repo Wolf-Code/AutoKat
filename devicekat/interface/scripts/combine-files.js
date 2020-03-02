@@ -8,8 +8,13 @@ const html = fs.readFileSync(pathHtml).toString()
 const scripts = fs.readFileSync(pathJs).toString()
 const styles = fs.readFileSync(pathCss).toString().trim()
 
-const combined = `${html}<script>${scripts}</script><style>${styles}</style>`
+const combined = `<style>${styles}</style>${html}<script>${scripts}</script>`
 fs.writeFileSync(`./build/output.html`, combined)
+
+let combinedSafe = combined
+combinedSafe = combinedSafe.replace(/\\/g, '\\\\')
+combinedSafe = combinedSafe.replace(/\"/g,'\\"')
+fs.writeFileSync(`./build/output-safe.html`, combinedSafe)
 
 fs.unlinkSync(pathHtml)
 fs.unlinkSync(pathJs)

@@ -24,7 +24,7 @@ void startAsAP()
 void startNormally()
 {
 	const StorageData data = StorageHelper::getStorageData();
-	if(!WifiAccess::connect(data.wifiSSID, data.wifiPassword))
+	if (!WifiAccess::connect(data.wifiSSID, data.wifiPassword))
 	{
 		Serial.println("Wifi connect failed, starting as AP");
 		startAsAP();
@@ -47,6 +47,13 @@ void Framework::initialize(FrameworkInitializeCallback callback)
 	Serial.begin(115200);
 	StorageHelper::initialize();
 	TimerHelper::initialize();
+	WiFi.mode(WIFI_STA);
+	WifiAccess::scanNetworks();
+	TimerHelper::startTimer(30000, []() {
+		WifiAccess::scanNetworks();
+		return false;
+	});
+
 	if (!StorageHelper::hasDataBeenWritten())
 	{
 		startAsAP();

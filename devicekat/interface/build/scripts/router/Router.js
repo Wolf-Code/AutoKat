@@ -40,9 +40,9 @@ var Router = /** @class */ (function () {
     };
     Router.prototype.renderRoute = function () {
         var route = this.findCurrentRoute();
-        route.view.preRender();
+        route.view.preRender && route.view.preRender();
         document.getElementById('router').innerHTML = route.view.render();
-        route.view.postRender();
+        route.view.postRender && route.view.postRender();
     };
     return Router;
 }());

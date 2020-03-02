@@ -1,9 +1,12 @@
 #include "WifiAccess.h"
 #include <ESP8266WiFi.h>
 #include <Logger.h>
+#include <StorageHelper.h>
+#include <StorageData.h>
 
 String WifiAccess::macAddress;
 bool WifiAccess::isAP;
+unsigned int WifiAccess::networks;
 
 String macToStr(const uint8_t *mac)
 {
@@ -52,6 +55,17 @@ bool WifiAccess::connect(const String &ssid, const String &password)
 	return true;
 }
 
+bool WifiAccess::connect()
+{
+	const StorageData data = StorageHelper::getStorageData();
+	return WifiAccess::connect(data.wifiSSID, data.wifiPassword);
+}
+
+void WifiAccess::disconnect()
+{
+	WiFi.disconnect();
+}
+
 void WifiAccess::startAsSoftAP()
 {
 	if (WiFi.softAP(F("AutoKat"), F("AutoKat123")))
@@ -90,5 +104,31 @@ void WifiAccess::stopSoftAP()
 	else
 	{
 		Logger::debugLine("Failed disabling AP");
+	}
+}
+
+void WifiAccess::scanNetworks()
+{
+	networks = WiFi.scanNetworks();
+}
+
+unsigned int WifiAccess::getNetworksCount()
+{
+	return networks;
+}
+
+WifiNetwork WifiAccess::getWifiNetwork(unsigned int &index)
+{
+	const String name = WiFi.SSID(index);
+	const int strength = WiFi.RSSI(index);
+
+	return WifiNetwork(name, strength);
+}
+
+void WifiAccess::getWifiNetworks(unsigned int &numberOfNetworks, WifiNetwork *networks)
+{
+	for(unsigned int i = 0; i < numberOfNetworks; ++i)
+	{
+		networks[i] = getWifiNetwork(i);
 	}
 }

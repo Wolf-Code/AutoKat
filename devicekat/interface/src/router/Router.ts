@@ -45,9 +45,9 @@ class Router {
 
 	renderRoute() {
 		const route = this.findCurrentRoute()
-		route.view.preRender()
+		route.view.preRender && route.view.preRender()
 		document.getElementById('router').innerHTML = route.view.render()
-		route.view.postRender()
+		route.view.postRender && route.view.postRender()
 	}
 }
 
