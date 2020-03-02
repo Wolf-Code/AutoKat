@@ -1,0 +1,1 @@
+Routing.RouterConfig.renderRoute();
