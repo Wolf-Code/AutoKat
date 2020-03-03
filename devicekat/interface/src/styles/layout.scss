@@ -1,9 +1,14 @@
+@import './colors.scss';
+
 body {
-	.container
+	#router
 	{
-		width: 100%;
-		max-width: 600px;
-		margin: auto;
-		background-color: lightgrey;
+		padding: 20px;
+		border-radius: 5px;
+		max-width: 700px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		background-color: $light;
 	}
 }

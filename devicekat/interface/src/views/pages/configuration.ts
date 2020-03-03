@@ -4,9 +4,9 @@ import { Link } from '../components/Link'
 export const Configuration : View = {
 	render: () => {
 		return `<div>
-			dit is de hoofdpagina
+			<h1>Configuration</h1>
 			${Link.render({
-				label: "test linkje",
+				label: "Wifi",
 				route: "/wifi"
 			})}
 		</div>`
