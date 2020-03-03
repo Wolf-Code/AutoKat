@@ -7,10 +7,9 @@
 		"build:clean": "node ./scripts/clean-target.js",
 		"build:html": "node ./scripts/minify-html.js",
 		"build:scss": "node-sass --output-style compressed src/styles.scss ./build/styles.css",
-		"build:minifyjs": "uglifyjs ./build/output/main.js --compress --mangle --output ./build/scripts.js",
-		"build:ts": "tsc && webpack",
+		"build:ts": "yarn microbundle build --sourcemap false --compress --output ./build/index.js -f umd ./src/index.ts",
 		"build:combine": "node ./scripts/combine-files.js",
-		"build": "yarn build:ts && yarn build:minifyjs && yarn build:scss && yarn build:html && yarn build:combine",
+		"build": "yarn build:ts && yarn build:scss && yarn build:html && yarn build:combine",
 		"debug": "live-server ./build/ --entry-file output.html --watch=./build/output.html"
 	},
 	"author": "",
@@ -25,10 +24,10 @@
 	"devDependencies": {
 		"@types/node": "^13.7.7",
 		"live-server": "^1.2.1",
+		"microbundle": "^0.11.0",
 		"typescript": "^3.8.3",
 		"uglify-js": "^3.8.0",
 		"watch": "^1.0.2",
-		"webpack": "^4.42.0",
 		"webpack-cli": "^3.3.11"
 	}
 }

@@ -1,11 +1,11 @@
 const fs = require('fs')
 
 const pathHtml = './build/index.html'
-const pathJs = './build/output/main.js'
+const pathJs = './build/index.umd.js'
 const pathCss = './build/styles.css'
 
-const html = fs.readFileSync(pathHtml).toString()
-const scripts = fs.readFileSync(pathJs).toString()
+const html = fs.readFileSync(pathHtml).toString().trim()
+const scripts = fs.readFileSync(pathJs).toString().trim()
 const styles = fs.readFileSync(pathCss).toString().trim()
 
 const combined = `<style>${styles}</style>${html}<script>${scripts}</script>`

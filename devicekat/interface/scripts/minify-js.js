@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const filePath = './build/output/main.js'
+const filePath = './build/index.umd.js'
 const contents = fs.readFileSync(filePath)
 const contentString = contents.toString()
 
