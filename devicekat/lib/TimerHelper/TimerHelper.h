@@ -7,7 +7,7 @@
 class TimerHelper
 {
 	public:
-		static Timer startTimer(unsigned int milliseconds, TimerCallback callback);
+		static Timer startTimer(unsigned int milliseconds, TimerCallback callback, bool startImmediately);
 		static void stopTimer(Timer &timer);
 		static void loop();
 		static void initialize();

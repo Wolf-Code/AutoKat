@@ -10,25 +10,25 @@ export const registerRoutes = (app: Application, io: SocketIO.Server) => {
 		'/log/:deviceid',
 		useRequestHandler(async (req, res) => {
 			await useDatabase(async connection => {
-				const repository = connection.getRepository(DeviceLogs)
-				let deviceLog = await repository.findOne({ _id: req.params.deviceid })
+				// const repository = connection.getRepository(DeviceLogs)
+				// let deviceLog = await repository.findOne({ _id: req.params.deviceid })
 
-				if (!deviceLog) {
-					deviceLog = {
-						_id: req.params.deviceid,
-						logs: []
-					}
+				// if (!deviceLog) {
+				// 	deviceLog = {
+				// 		_id: req.params.deviceid,
+				// 		logs: []
+				// 	}
 
-					await repository.insert(deviceLog)
-				}
+				// 	await repository.insert(deviceLog)
+				// }
 
 				const log = req.body as DeviceLog
 				log.moment = new Date()
-				deviceLog.logs.push(log)
+				//deviceLog.logs.push(log)
 
-				await repository.update({ _id: deviceLog._id }, { logs: deviceLog.logs })
+				// await repository.update({ _id: deviceLog._id }, { logs: deviceLog.logs })
 
-				io.emit(`devicelog.new/${deviceLog._id}`, log)
+				io.emit(`devicelog.new/${req.params.deviceid}`, log)
 
 				res.send(log)
 			})

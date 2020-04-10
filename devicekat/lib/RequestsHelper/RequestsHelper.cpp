@@ -82,7 +82,7 @@ JsonRequestResult RequestsHelper::post(String endPoint, int bufferSize, JsonDocu
 	return result;
 }
 
-JsonRequestResult RequestsHelper::post(String endPoint, JsonDocument payload)
+JsonRequestResult RequestsHelper::post(String endPoint, JsonDocument& payload)
 {
 	const String url = RequestsHelper::getUrlToEndPoint(endPoint);
 

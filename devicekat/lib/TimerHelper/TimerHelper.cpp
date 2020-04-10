@@ -28,13 +28,18 @@ void TimerHelper::loop()
 	}
 }
 
-Timer TimerHelper::startTimer(unsigned int milliseconds, TimerCallback callback)
+Timer TimerHelper::startTimer(unsigned int milliseconds, TimerCallback callback, bool startImmediately)
 {
 	const unsigned int freeIndex = findFreeTimerIndex();
 	freeTimers[freeIndex] = false;
 
 	const Timer timer(freeIndex, milliseconds, callback);
 	timers[freeIndex] = timer;
+
+	if (startImmediately)
+	{
+		timers[freeIndex].validate();
+	}
 
 	return timer;
 }

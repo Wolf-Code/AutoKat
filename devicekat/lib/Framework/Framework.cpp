@@ -9,16 +9,15 @@
 #include <StorageData.h>
 #include <RequestsHelper.h>
 #include <TimerHelper.h>
+#include <Feeder.h>
+#include <Scale.h>
+#include <Screen.h>
 
 void startAsAP()
 {
 	Serial.println("Starting as AP");
 	WifiAccess::startAsSoftAP();
 	ConfigurationServer::start();
-	if (!SPIFFS.begin())
-	{
-		Serial.println("An Error has occurred while mounting SPIFFS");
-	}
 }
 
 void startNormally()
@@ -35,16 +34,12 @@ void startNormally()
 	Logger::initialize();
 	OTAHelper::initialize();
 	ConfigurationServer::start();
-
-	if (!SPIFFS.begin())
-	{
-		Logger::errorLine("An Error has occurred while mounting SPIFFS");
-	}
+	Screen::initialize();
 }
 
 void Framework::initialize(FrameworkInitializeCallback callback)
 {
-	Serial.begin(115200);
+	Serial.begin(9600);
 	StorageHelper::initialize();
 	TimerHelper::initialize();
 	WiFi.mode(WIFI_STA);
@@ -52,13 +47,18 @@ void Framework::initialize(FrameworkInitializeCallback callback)
 	TimerHelper::startTimer(30000, []() {
 		WifiAccess::scanNetworks();
 		return false;
-	});
+	}, true);
+
+	Feeder::initialize();
+	Scale::initialize();
 
 	if (!StorageHelper::hasDataBeenWritten())
 	{
+		Serial.println("Starting as access point");
 		startAsAP();
 		return;
 	}
+	Logger::debugLine("Starting normally");
 
 	startNormally();
 	callback();
@@ -70,6 +70,7 @@ void Framework::loop(FrameworkLoopCallback callback)
 	DeviceHelper::loop();
 	ConfigurationServer::loop();
 	TimerHelper::loop();
+	Feeder::loop();
 
 	if (!WifiAccess::isConnected())
 	{
