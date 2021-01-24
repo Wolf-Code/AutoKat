@@ -1,0 +1,68 @@
+$size-mobile: 900px;
+$size-desktop: 1600px;
+
+// -----------------------------------------------------------------------------------
+// -- Mobile
+@mixin mobile-only {
+	@media only screen and (max-width: $size-mobile) {
+		@content;
+	}
+}
+
+// -----------------------------------------------------------------------------------
+// -- Tablet
+@mixin tablet-only {
+	@media only screen and (min-width: $size-mobile) and (max-width: $size-desktop) {
+		@content;
+	}
+}
+
+@mixin tablet-up {
+	@media only screen and (min-width: $size-mobile) {
+		@content;
+	}
+}
+
+@mixin tablet-down {
+	@media only screen and (max-width: $size-desktop) {
+		@content;
+	}
+}
+
+// -----------------------------------------------------------------------------------
+// -- Desktop
+@mixin desktop-only {
+	@media only screen and (min-width: $size-desktop) {
+		@content;
+	}
+}
+
+@include mobile-only {
+	.desktop-only {
+		display: none;
+	}
+
+	.tablet-only {
+		display: none;
+	}
+}
+
+@include tablet-only {
+	.desktop-only {
+		display: none;
+	}
+
+	.mobile-only {
+		display: none;
+	}
+}
+
+@include desktop-only {
+	.mobile-only {
+		display: none;
+	}
+
+	.tablet-only {
+		display: none;
+	}
+}

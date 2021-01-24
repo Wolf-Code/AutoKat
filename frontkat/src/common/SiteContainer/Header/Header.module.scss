@@ -1,0 +1,11 @@
+@import 'styles/responsive';
+@import 'styles/fonts';
+@import 'styles/colors';
+
+.root {
+    .menu {
+        @include tablet-down {
+            display: none;
+        }
+    }
+}

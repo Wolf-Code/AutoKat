@@ -1,29 +1,42 @@
-import socketIOClient from 'socket.io-client'
-import React, { useState, useEffect } from 'react'
-import { DevicesProvider } from './contexts/devices/DeviceContext'
-import { Device } from './domain/device/Device'
-import { useFetch } from './core/utils/useFetch'
-import { LogsPage } from './components/devicelog/LogsPage'
-import { SocketProvider } from './contexts/socket/SocketContext'
+import PreferencesContext from 'account/preferences/PreferencesContext'
+import PreferencesPage from 'account/preferences/PreferencesPage'
+import AuthenticationContext from 'authentication/AuthenticationContext'
+import { RegistrationPage } from 'authentication/registration'
+import { SignInPage } from 'authentication/sign-in'
+import SiteContainer from 'common/SiteContainer'
+import TranslationsContext from 'core/translations/TranslationsContext'
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch
+} from 'react-router-dom'
 
-function App() {
-	const [socket, setSocket] = useState<SocketIOClient.Socket>(socketIOClient({ autoConnect: false }))
-	const { response: devices } = useFetch<Device[]>('device', {
-		method: 'GET'
-	})
-
-	useEffect(() => {
-		const localSocket = socketIOClient(process.env.REACT_APP_SERVER_URL as string)
-		setSocket(localSocket)
-	}, [])
-
-	return (
-		<DevicesProvider value={devices || []}>
-			<SocketProvider value={socket}>
-				<LogsPage />
-			</SocketProvider>
-		</DevicesProvider>
-	)
-}
+const App = () => (
+    <TranslationsContext>
+        <PreferencesContext>
+            <AuthenticationContext>
+                <Router>
+                    <SiteContainer>
+                        <Switch>
+                            <Route 
+                                path='/signin'
+                                component={ SignInPage } 
+                            />
+                            <Route
+                                path='/register'
+                                component={ RegistrationPage }
+                            />
+                            <Route 
+                                path='/account'
+                                component={ PreferencesPage }
+                            />
+                        </Switch>
+                    </SiteContainer>
+                </Router>
+            </AuthenticationContext>
+        </PreferencesContext>
+    </TranslationsContext>
+)
 
 export default App

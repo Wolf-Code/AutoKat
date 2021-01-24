@@ -1,0 +1,16 @@
+@import 'styles/responsive';
+@import 'styles/fonts';
+@import 'styles/colors';
+
+.root {
+    min-height: 100vh;
+    
+    @include desktop-only {
+        width: $size-desktop;
+        margin: 0 auto;
+    }
+
+    .page {
+        flex: 1;
+    }
+}
