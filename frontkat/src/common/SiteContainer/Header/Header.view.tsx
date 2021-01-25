@@ -4,6 +4,7 @@ import {
     Menu
 } from 'antd'
 import cx from 'classnames'
+import Translation from 'core/translations/Translation'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { HeaderViewProps } from './Header.types'
@@ -38,7 +39,9 @@ export default (props: HeaderViewProps) => {
                     { !isSignedIn && (
                         <>
                             <Menu.Item>
-                                <Link to='/signin'>Sign in</Link>
+                                <Link to='/signin'>
+                                    <Translation translation='AccountTranslations.SignIn' />
+                                </Link>
                             </Menu.Item>
                             <Menu.Item>
                                 <Link to='/register'>Register</Link>
@@ -49,10 +52,14 @@ export default (props: HeaderViewProps) => {
                     { isSignedIn && (
                         <>
                             <Menu.Item>
-                                <Link to='/account'>Account</Link>
+                                <Link to='/account'>
+                                    <Translation translation='AccountTranslations.Name' />
+                                </Link>
                             </Menu.Item>
                             <Menu.Item>
-                                <Link to='/signout'>Sign out</Link>
+                                <Link to='/signout'>
+                                    <Translation translation='AccountTranslations.SignOut' />
+                                </Link>
                             </Menu.Item>
                         </>
                     )}

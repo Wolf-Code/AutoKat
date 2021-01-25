@@ -1,5 +1,5 @@
 import useFetch from 'core/utilities/useFetch'
-import { useAuthenticationContext } from './AuthenticationContext'
+import useAuthenticationAtom from './AuthenticationAtom'
 
 interface AuthenticationData {
     id: string,
@@ -14,7 +14,7 @@ interface SignInResult {
 }
 
 export default () => {
-    const authenticationContext = useAuthenticationContext()
+    const [, setAuthenticationAtom] = useAuthenticationAtom()
     const { post } = useFetch()
 
     const signIn = async(email: string, password: string) => {
@@ -24,7 +24,9 @@ export default () => {
         })
 
         if (result.success) {
-            authenticationContext.setToken(result.authenticationData.token)
+            setAuthenticationAtom(state => {
+                state.token = result.authenticationData.token
+            })
         }
     
         return result

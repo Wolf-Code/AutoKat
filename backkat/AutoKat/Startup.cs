@@ -66,6 +66,11 @@ namespace AutoKat
 
 					options.Events = new JwtBearerEvents
 					{
+						OnMessageReceived = context =>
+						{
+							context.Token = context.Request.Cookies["Authorization"];
+							return Task.CompletedTask;
+						},
 						OnAuthenticationFailed = context =>
 						{
 							if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))

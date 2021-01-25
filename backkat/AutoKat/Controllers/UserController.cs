@@ -1,7 +1,9 @@
 ﻿using AutoKat.Domain.Users;
 using AutoKat.Infrastructure.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace AutoKat.Controllers
@@ -22,7 +24,19 @@ namespace AutoKat.Controllers
 		[Route("login")]
 		public async Task<UserLoginResult> Post([FromBody] UserLogin login)
 		{
-			return await this.userService.LoginUser(login);
+			var result = await this.userService.LoginUser(login);
+
+			if (result.Success)
+			{
+				Response.Cookies.Append("Authorization", result.AuthenticationData.Token, new CookieOptions
+				{
+					Expires = DateTimeOffset.FromUnixTimeSeconds(result.AuthenticationData.TokenExpirationTime),
+					HttpOnly = true,
+					Secure = true
+				});
+			}
+
+			return result;
 		}
 
 		[HttpPost]

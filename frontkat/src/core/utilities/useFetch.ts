@@ -1,16 +1,18 @@
-import { useAuthenticationContext } from "authentication/AuthenticationContext"
+import useAuthenticationAtom, { isSignedInSelector } from 'authentication/AuthenticationAtom'
+import { useRecoilValue } from 'recoil'
 
 const getUrl = (path: string) => `${ process.env.REACT_APP_API_PATH }/${ path }`
 
 export default () => {
-    const authenticationContext = useAuthenticationContext()
+    const [authenticationAtom] = useAuthenticationAtom()
+    const signedIn = useRecoilValue(isSignedInSelector)
 
     const headers = (): HeadersInit => {
         const requestHeaders: HeadersInit = new Headers()
         requestHeaders.set('Content-Type', 'application/json')
 
-        if(authenticationContext.isSignedIn()) {
-            requestHeaders.set('Authorization', `Bearer ${ authenticationContext.token }`)
+        if(signedIn) {
+            requestHeaders.set('Authorization', `Bearer ${ authenticationAtom.token }`)
         }
 
         return requestHeaders

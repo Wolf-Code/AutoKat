@@ -1,6 +1,5 @@
 import PreferencesContext from 'account/preferences/PreferencesContext'
 import PreferencesPage from 'account/preferences/PreferencesPage'
-import AuthenticationContext from 'authentication/AuthenticationContext'
 import { RegistrationPage } from 'authentication/registration'
 import { SignInPage } from 'authentication/sign-in'
 import SiteContainer from 'common/SiteContainer'
@@ -11,11 +10,12 @@ import {
     Route,
     Switch
 } from 'react-router-dom'
+import { RecoilRoot } from 'recoil'
 
 const App = () => (
-    <TranslationsContext>
-        <PreferencesContext>
-            <AuthenticationContext>
+    <RecoilRoot>
+        <TranslationsContext>
+            <PreferencesContext>
                 <Router>
                     <SiteContainer>
                         <Switch>
@@ -34,9 +34,9 @@ const App = () => (
                         </Switch>
                     </SiteContainer>
                 </Router>
-            </AuthenticationContext>
-        </PreferencesContext>
-    </TranslationsContext>
+            </PreferencesContext>
+        </TranslationsContext>
+    </RecoilRoot>
 )
 
 export default App

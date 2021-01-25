@@ -1,14 +1,15 @@
-import { useAuthenticationContext } from 'authentication/AuthenticationContext'
+import { isSignedInSelector } from 'authentication/AuthenticationAtom'
+import { useRecoilValue } from 'recoil'
 import {
     HeaderStateProps,
     HeaderViewProps
 } from './Header.types'
 
 export default (props: HeaderStateProps): HeaderViewProps => {
-    const context = useAuthenticationContext()
+    const signedIn = useRecoilValue(isSignedInSelector)
 
     return {
-        isSignedIn: context.isSignedIn(),
+        isSignedIn: signedIn,
         ...props
     }
 }
