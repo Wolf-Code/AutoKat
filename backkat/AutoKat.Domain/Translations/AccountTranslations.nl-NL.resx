@@ -126,4 +126,7 @@
   <data name="SignOut" xml:space="preserve">
     <value>Uitloggen</value>
   </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registreren</value>
+  </data>
 </root>

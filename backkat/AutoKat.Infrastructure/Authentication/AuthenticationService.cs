@@ -1,9 +1,13 @@
-﻿using AutoKat.Domain.Users;
+﻿using AutoKat.Data.Sessions;
+using AutoKat.Data.Users.Entities;
+using AutoKat.Domain.Users;
+using AutoKat.Infrastructure.HttpContext;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AutoKat.Infrastructure.Authentication
 {
@@ -11,13 +15,23 @@ namespace AutoKat.Infrastructure.Authentication
 	{
 		private readonly string jwtSecret;
 		private readonly int jwtLifespan;
+		private readonly IHttpContextService httpContextService;
+		private readonly ISessionRepository sessionRepository;
 
-		public AuthenticationService(string jwtSecret, int jwtLifespan)
+		public AuthenticationService(
+			string jwtSecret,
+			int jwtLifespan,
+			IHttpContextService httpContextService,
+			ISessionRepository sessionRepository
+		)
 		{
 			this.jwtSecret = jwtSecret;
 			this.jwtLifespan = jwtLifespan;
-
+			this.httpContextService = httpContextService;
+			this.sessionRepository = sessionRepository;
 		}
+
+		public int JwtLifespan => jwtLifespan;
 
 		public UserAuthenticationData GetAuthenticationData(string email)
 		{
@@ -44,6 +58,14 @@ namespace AutoKat.Infrastructure.Authentication
 				TokenExpirationTime = ((DateTimeOffset)expirationTime).ToUnixTimeSeconds(),
 				Id = email
 			};
+		}
+
+		public async Task<bool> ValidateTokenWithSession(string token, User user)
+		{
+			var ip = this.httpContextService.GetCurrentUserIpAddress();
+			var session = await this.sessionRepository.GetActiveSession(user, token, ip);
+
+			return session != null;
 		}
 	}
 }

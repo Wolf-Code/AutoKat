@@ -1,6 +1,7 @@
 import useSafeRecoilState from 'core/utilities/useSafeRecoilState'
 import {
-    atom, selector
+    atom,
+    selector
 } from 'recoil'
 
 const key = 'authentication'
@@ -19,18 +20,8 @@ export const isSignedInSelector = selector({
     get: ({ get }) => {
         const state = get(AuthenticationAtom)
         
-        return state.token !== undefined
+        return !!state.token
     }
 })
 
 export default () => useSafeRecoilState(AuthenticationAtom)
-// export default (): [StateType, (stateSetter: (state: StateType) => void) => void] => {
-//     const [state, setter] = useRecoilState(AuthenticationAtom)
-
-//     const safeSetter = useMemo(() => (stateSetter: (state: StateType) => void) => setter(curState => produce(curState, stateSetter)), [state, setter])
-
-//     return [
-//         state, 
-//         safeSetter
-//     ]
-// }

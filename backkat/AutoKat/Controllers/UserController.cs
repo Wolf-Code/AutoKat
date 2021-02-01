@@ -1,7 +1,6 @@
 ﻿using AutoKat.Domain.Users;
 using AutoKat.Infrastructure.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -20,23 +19,40 @@ namespace AutoKat.Controllers
 			this.userService = userService;
 		}
 
+		[Authorize]
+		[HttpGet]
+		public async Task<UserInformationResult> GetUserInformation()
+		{
+			return await this.userService.GetCurrentUserInformation();
+		}
+
 		[HttpPost]
 		[Route("login")]
-		public async Task<UserLoginResult> Post([FromBody] UserLogin login)
+		public async Task<UserLoginResult> Login([FromBody] UserLogin login)
 		{
 			var result = await this.userService.LoginUser(login);
 
-			if (result.Success)
+			if (result.Success && login.RememberMe)
 			{
-				Response.Cookies.Append("Authorization", result.AuthenticationData.Token, new CookieOptions
+				Response.Cookies.Append("Token", result.AuthenticationData.Token, new Microsoft.AspNetCore.Http.CookieOptions
 				{
+					SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax,
 					Expires = DateTimeOffset.FromUnixTimeSeconds(result.AuthenticationData.TokenExpirationTime),
-					HttpOnly = true,
-					Secure = true
+					Secure = true,
+					HttpOnly = true
 				});
 			}
 
 			return result;
+		}
+
+		[HttpGet]
+		[Route("logout")]
+		[Authorize]
+		public async Task Logout()
+		{
+			await this.userService.LogoutUser();
+			Response.Cookies.Delete("Token");
 		}
 
 		[HttpPost]

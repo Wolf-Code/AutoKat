@@ -2,6 +2,8 @@ import PreferencesContext from 'account/preferences/PreferencesContext'
 import PreferencesPage from 'account/preferences/PreferencesPage'
 import { RegistrationPage } from 'authentication/registration'
 import { SignInPage } from 'authentication/sign-in'
+import EnsureSignedIn from 'authentication/sign-in/EnsureSignedIn'
+import SignOutPage from 'authentication/sign-in/SignOutPage'
 import SiteContainer from 'common/SiteContainer'
 import TranslationsContext from 'core/translations/TranslationsContext'
 import React from 'react'
@@ -17,11 +19,16 @@ const App = () => (
         <TranslationsContext>
             <PreferencesContext>
                 <Router>
+                    <EnsureSignedIn />
                     <SiteContainer>
                         <Switch>
                             <Route 
                                 path='/signin'
                                 component={ SignInPage } 
+                            />
+                            <Route 
+                                path='/signout'
+                                component={ SignOutPage } 
                             />
                             <Route
                                 path='/register'

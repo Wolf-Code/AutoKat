@@ -1,4 +1,5 @@
-﻿using AutoKat.Data.Users;
+﻿using AutoKat.Data.Sessions;
+using AutoKat.Data.Users;
 using AutoKat.Data.Users.Entities;
 using AutoKat.Domain.Translations;
 using AutoKat.Domain.Users;
@@ -16,18 +17,21 @@ namespace AutoKat.Infrastructure.Users
 		private readonly ICryptographyService cryptographyService;
 		private readonly IAuthenticationService authenticationService;
 		private readonly IHttpContextService httpContextService;
+		private readonly ISessionRepository sessionRepository;
 
 		public UserService(
 			IUserRepository userRepository,
 			ICryptographyService cryptographyService,
 			IAuthenticationService authenticationService,
-			IHttpContextService httpContextService
+			IHttpContextService httpContextService,
+			ISessionRepository sessionRepository
 		)
 		{
 			this.userRepository = userRepository;
 			this.cryptographyService = cryptographyService;
 			this.authenticationService = authenticationService;
 			this.httpContextService = httpContextService;
+			this.sessionRepository = sessionRepository;
 		}
 
 		public async Task<User> GetCurrentUser(bool throwIfNone = true)
@@ -44,6 +48,17 @@ namespace AutoKat.Infrastructure.Users
 			}
 
 			return null;
+		}
+
+		public async Task<UserInformationResult> GetCurrentUserInformation()
+		{
+			var user = await this.GetCurrentUser();
+
+			return new UserInformationResult
+			{
+				Success = true,
+				Token = this.httpContextService.GetToken()
+			};
 		}
 
 		public async Task<UserPreferences> GetCurrentUserPreferences()
@@ -67,7 +82,20 @@ namespace AutoKat.Infrastructure.Users
 			}
 
 			var authData = this.authenticationService.GetAuthenticationData(user.Email);
+
+			var ip = this.httpContextService.GetCurrentUserIpAddress();
+			await this.sessionRepository.StartNewSession(user, authData.Token, ip, this.authenticationService.JwtLifespan);
+
 			return new UserLoginResult(authData);
+		}
+
+		public async Task LogoutUser()
+		{
+			var user = await this.GetCurrentUser();
+			var token = this.httpContextService.GetToken();
+			var ip = this.httpContextService.GetCurrentUserIpAddress();
+
+			await this.sessionRepository.EndActiveSession(user, token, ip);
 		}
 
 		public async Task<UserRegistrationResult> RegisterUser(UserRegistration newUser)
@@ -89,7 +117,8 @@ namespace AutoKat.Infrastructure.Users
 			{
 				Email = newUser.Email.ToLower(),
 				Password = this.cryptographyService.Hash(newUser.Password, salt),
-				Salt = salt
+				Salt = salt,
+				Preferences = new UserPreferences()
 			});
 
 			var authData = this.authenticationService.GetAuthenticationData(user.Email);

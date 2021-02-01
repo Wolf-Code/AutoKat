@@ -21,6 +21,12 @@ namespace AutoKat.Infrastructure.Users
 		Task<UserRegistrationResult> RegisterUser(UserRegistration newUser);
 
 		/// <summary>
+		/// Returns the current user's information.
+		/// </summary>
+		/// <returns>The current user's information</returns>
+		Task<UserInformationResult> GetCurrentUserInformation();
+
+		/// <summary>
 		/// Signs in a user.
 		/// </summary>
 		/// <param name="login">The login credentials.</param>
@@ -33,5 +39,11 @@ namespace AutoKat.Infrastructure.Users
 		/// <param name="throwIfNone">Throws an exception if no user is signed in.</param>
 		/// <returns>The currently signed in user</returns>
 		Task<User> GetCurrentUser(bool throwIfNone = true);
+
+		/// <summary>
+		/// Logs out the current user.
+		/// </summary>
+		/// <returns></returns>
+		Task LogoutUser();
 	}
 }

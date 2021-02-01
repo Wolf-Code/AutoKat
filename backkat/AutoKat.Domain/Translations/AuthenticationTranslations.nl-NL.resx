@@ -135,4 +135,7 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Onthouden</value>
   </data>
+  <data name="SignedOut" xml:space="preserve">
+    <value>Je bent met succes uitgelogd</value>
+  </data>
 </root>

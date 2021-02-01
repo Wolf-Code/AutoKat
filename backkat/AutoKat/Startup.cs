@@ -1,14 +1,19 @@
 using AutoKat.Core.DependencyInjection;
 using AutoKat.Data;
+using AutoKat.Data.Sessions;
 using AutoKat.Infrastructure.Authentication;
+using AutoKat.Infrastructure.HttpContext;
+using AutoKat.Infrastructure.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -68,8 +73,36 @@ namespace AutoKat
 					{
 						OnMessageReceived = context =>
 						{
-							context.Token = context.Request.Cookies["Authorization"];
+							var cookies = context.HttpContext.Request.Cookies;
+							var cookie = cookies["Token"];
+							if (!string.IsNullOrEmpty(cookie))
+							{
+								context.Token = cookie;
+							}
+
 							return Task.CompletedTask;
+						},
+						OnTokenValidated = async context =>
+						{
+							if (context.Result == null || !context.Result.Succeeded)
+							{
+								return;
+							}
+
+							var accessToken = context.SecurityToken as JwtSecurityToken;
+							if (accessToken == null)
+							{
+								return;
+							}
+
+							var authenticationService = context.HttpContext.RequestServices.GetRequiredService<IAuthenticationService>();
+							var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+							var user = await userService.GetCurrentUser();
+							if (!await authenticationService.ValidateTokenWithSession(accessToken.RawCiphertext, user))
+							{
+								context.Fail("Invalid session for this token.");
+								return;
+							}
 						},
 						OnAuthenticationFailed = context =>
 						{
@@ -83,10 +116,12 @@ namespace AutoKat
 					};
 				});
 
-			services.AddSingleton<IAuthenticationService>(
+			services.AddTransient<IAuthenticationService>(serviceProvider =>
 				new AuthenticationService(
 					jwtSecret,
-					Configuration.GetValue<int>("JwtLifespan")
+					Configuration.GetValue<int>("JwtLifespan"),
+					serviceProvider.GetRequiredService<IHttpContextService>(),
+					serviceProvider.GetRequiredService<ISessionRepository>()
 				)
 			);
 		}
@@ -100,11 +135,17 @@ namespace AutoKat
 				app.UseCors(builder =>
 				{
 					builder
-						.AllowAnyOrigin()
+						.SetIsOriginAllowed(x => true)
+						.AllowCredentials()
 						.AllowAnyHeader()
 						.AllowAnyMethod();
 				});
 			}
+
+			app.UseForwardedHeaders(new ForwardedHeadersOptions
+			{
+				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+			});
 
 			app.UseHttpsRedirection();
 

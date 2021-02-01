@@ -1,5 +1,6 @@
 ﻿using AutoKat.Data.Devices.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,20 @@ namespace AutoKat.Data
 			foreach (var type in EntityTypes)
 			{
 				modelBuilder.Entity(type);
+			}
+
+
+			var dateTimeConverter = new ValueConverter<DateTime, DateTime>(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+			foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+			{
+				foreach (var property in entityType.GetProperties())
+				{
+					if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+					{
+						property.SetValueConverter(dateTimeConverter);
+					}
+				}
 			}
 
 			base.OnModelCreating(modelBuilder);

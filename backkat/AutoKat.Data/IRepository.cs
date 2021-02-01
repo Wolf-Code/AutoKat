@@ -9,5 +9,7 @@ namespace AutoKat.Data
 		Task<T> Insert(T entity);
 
 		Task<T> FindById(object id, bool throwIfNotFound = true);
+
+		Task SaveChanges();
 	}
 }

@@ -34,6 +34,11 @@ namespace AutoKat.Data
 			return result.Entity;
 		}
 
+		public async Task SaveChanges()
+		{
+			await autoKatContext.SaveChangesAsync();
+		}
+
 		protected IQueryable<TEntity> Query()
 		{
 			return this.autoKatContext.Set<TEntity>();

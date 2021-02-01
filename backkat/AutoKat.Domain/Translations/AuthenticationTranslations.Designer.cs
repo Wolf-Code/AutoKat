@@ -113,5 +113,14 @@ namespace AutoKat.Domain.Translations {
                 return ResourceManager.GetString("RememberMe", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have been succesfully signed out.
+        /// </summary>
+        public static string SignedOut {
+            get {
+                return ResourceManager.GetString("SignedOut", resourceCulture);
+            }
+        }
     }
 }

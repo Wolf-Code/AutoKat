@@ -32,10 +32,10 @@ export default (props: HeaderViewProps) => {
             >
                 <Menu.Item>
                     <Link to='/'>
-                        Home
+                        <Translation translation='HomeTranslations.Name' />
                     </Link>
                 </Menu.Item>
-                <SubMenu key='SubMenu' icon={ <SettingOutlined /> } title='Account'>
+                <SubMenu key='SubMenu' icon={ <SettingOutlined /> } title={ <Translation translation='AccountTranslations.Name' /> }>
                     { !isSignedIn && (
                         <>
                             <Menu.Item>
@@ -44,7 +44,9 @@ export default (props: HeaderViewProps) => {
                                 </Link>
                             </Menu.Item>
                             <Menu.Item>
-                                <Link to='/register'>Register</Link>
+                                <Link to='/register'>
+                                    <Translation translation='AccountTranslations.Register' />
+                                </Link>
                             </Menu.Item>
                         </>
                     )}

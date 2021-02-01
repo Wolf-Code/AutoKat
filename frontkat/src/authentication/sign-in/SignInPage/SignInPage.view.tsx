@@ -45,7 +45,7 @@ export default (props: SignInPageViewProps) => {
                 </Form.Item>
 
                 <Form.Item 
-                    name='remember' 
+                    name='rememberMe' 
                     valuePropName='checked'
                 >
                     <Checkbox>

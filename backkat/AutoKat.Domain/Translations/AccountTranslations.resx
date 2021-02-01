@@ -106,4 +106,7 @@
   <data name="SignOut" xml:space="preserve">
     <value>Sign out</value>
   </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
 </root>

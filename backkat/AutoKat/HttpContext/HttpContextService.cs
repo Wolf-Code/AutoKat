@@ -1,5 +1,6 @@
 ﻿using AutoKat.Infrastructure.HttpContext;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 using System.Security.Claims;
 
 namespace AutoKat.HttpContext
@@ -18,6 +19,16 @@ namespace AutoKat.HttpContext
 			var claim = this.httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Email);
 
 			return claim?.Value;
+		}
+
+		public IPAddress GetCurrentUserIpAddress()
+		{
+			return this.httpContextAccessor.HttpContext.Connection.RemoteIpAddress;
+		}
+
+		public string GetToken()
+		{
+			return this.httpContextAccessor.HttpContext.Request.Cookies["Token"];
 		}
 	}
 }

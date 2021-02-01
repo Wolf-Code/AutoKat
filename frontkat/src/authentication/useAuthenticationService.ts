@@ -13,24 +13,55 @@ interface SignInResult {
     authenticationData: AuthenticationData
 }
 
-export default () => {
-    const [, setAuthenticationAtom] = useAuthenticationAtom()
-    const { post } = useFetch()
+interface UserInformationResult {
+    success: boolean,
+    token: string
+}
 
-    const signIn = async(email: string, password: string) => {
+export default () => {
+    const [, updateAuthenticationAtom] = useAuthenticationAtom()
+    const { 
+        get,
+        post 
+    } = useFetch()
+
+    const signIn = async(email: string, password: string, rememberMe: boolean) => {
         const result = await post<SignInResult>('user/login', {
             email,
-            password
+            password,
+            rememberMe
         })
 
         if (result.success) {
-            setAuthenticationAtom(state => {
+            updateAuthenticationAtom(state => {
                 state.token = result.authenticationData.token
             })
         }
     
         return result
     }
+
+    const ensureSignedIn = async() => {
+        const result = await get<UserInformationResult>('user')
+
+        if (result.success) {
+            updateAuthenticationAtom(state => {
+                state.token = result.token
+            })
+        }
+    }
+
+    const signOut = async() => {
+        await get('user/logout')
+
+        updateAuthenticationAtom(state => {
+            state.token = undefined
+        })
+    }
     
-    return { signIn }
+    return { 
+        signIn,
+        ensureSignedIn,
+        signOut
+    }
 }
