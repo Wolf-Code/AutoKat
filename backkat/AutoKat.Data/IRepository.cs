@@ -10,6 +10,8 @@ namespace AutoKat.Data
 
 		Task<T> FindById(object id, bool throwIfNotFound = true);
 
+		Task Delete(T entity);
+
 		Task SaveChanges();
 	}
 }

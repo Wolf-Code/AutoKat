@@ -1,4 +1,5 @@
-﻿using AutoKat.Domain.Users;
+﻿using AutoKat.Domain.Authentication;
+using AutoKat.Domain.Users;
 using AutoKat.Infrastructure.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,12 +35,13 @@ namespace AutoKat.Controllers
 
 			if (result.Success && login.RememberMe)
 			{
-				Response.Cookies.Append("Token", result.AuthenticationData.Token, new Microsoft.AspNetCore.Http.CookieOptions
+				Response.Cookies.Append(AuthenticationConstants.RefreshTokenCookie, result.AuthenticationData.RefreshToken, new Microsoft.AspNetCore.Http.CookieOptions
 				{
 					SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax,
 					Expires = DateTimeOffset.FromUnixTimeSeconds(result.AuthenticationData.TokenExpirationTime),
 					Secure = true,
-					HttpOnly = true
+					HttpOnly = true,
+					Path = "/api/refresh"
 				});
 			}
 
@@ -52,7 +54,7 @@ namespace AutoKat.Controllers
 		public async Task Logout()
 		{
 			await this.userService.LogoutUser();
-			Response.Cookies.Delete("Token");
+			Response.Cookies.Delete(AuthenticationConstants.RefreshTokenCookie);
 		}
 
 		[HttpPost]

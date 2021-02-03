@@ -13,9 +13,9 @@ interface SignInResult {
     authenticationData: AuthenticationData
 }
 
-interface UserInformationResult {
+interface RefreshTokenResult {
     success: boolean,
-    token: string
+    authenticationData: AuthenticationData
 }
 
 export default () => {
@@ -41,12 +41,12 @@ export default () => {
         return result
     }
 
-    const ensureSignedIn = async() => {
-        const result = await get<UserInformationResult>('user')
+    const refreshToken = async() => {
+        const result = await get<RefreshTokenResult>('refresh')
 
         if (result.success) {
             updateAuthenticationAtom(state => {
-                state.token = result.token
+                state.token = result.authenticationData.token
             })
         }
     }
@@ -61,7 +61,7 @@ export default () => {
     
     return { 
         signIn,
-        ensureSignedIn,
-        signOut
+        signOut,
+        refreshToken
     }
 }

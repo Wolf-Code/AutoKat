@@ -5,7 +5,9 @@ namespace AutoKat.Infrastructure.HttpContext
 {
 	public interface IHttpContextService : IService
 	{
-		string GetToken();
+		string GetCookieRefreshToken();
+
+		string GetHeaderToken();
 
 		string GetCurrentUserEmail();
 

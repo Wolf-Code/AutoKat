@@ -2,10 +2,10 @@ import useAuthenticationService from 'authentication/useAuthenticationService'
 import { useEffect } from 'react'
 
 export default () => {
-    const { ensureSignedIn } = useAuthenticationService()
+    const { refreshToken } = useAuthenticationService()
 
     useEffect(() => {
-        const retrieve = async() => await ensureSignedIn()
+        const retrieve = async() => await refreshToken()
 
         retrieve()
     }, [])

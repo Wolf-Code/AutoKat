@@ -38,7 +38,7 @@ export default (props: SignInPageStateProps): SignInPageViewProps => {
         if (!signedIn) {
             return
         }
-
+        
         const handler = async() => {
             history.replace('/')
             await retrievePreferences()

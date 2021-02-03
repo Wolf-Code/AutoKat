@@ -1,12 +1,15 @@
-﻿using AutoKat.Data.Sessions;
+﻿using AutoKat.Core.Utilities.DateTime;
+using AutoKat.Data.Sessions;
 using AutoKat.Data.Users;
 using AutoKat.Data.Users.Entities;
+using AutoKat.Domain.Authentication;
 using AutoKat.Domain.Translations;
 using AutoKat.Domain.Users;
 using AutoKat.Infrastructure.Authentication;
 using AutoKat.Infrastructure.Cryptography;
 using AutoKat.Infrastructure.HttpContext;
 using AutoKat.Infrastructure.Users.Exceptions;
+using System;
 using System.Threading.Tasks;
 
 namespace AutoKat.Infrastructure.Users
@@ -18,13 +21,15 @@ namespace AutoKat.Infrastructure.Users
 		private readonly IAuthenticationService authenticationService;
 		private readonly IHttpContextService httpContextService;
 		private readonly ISessionRepository sessionRepository;
+		private readonly IDateTimeProvider dateTimeProvider;
 
 		public UserService(
 			IUserRepository userRepository,
 			ICryptographyService cryptographyService,
 			IAuthenticationService authenticationService,
 			IHttpContextService httpContextService,
-			ISessionRepository sessionRepository
+			ISessionRepository sessionRepository,
+			IDateTimeProvider dateTimeProvider
 		)
 		{
 			this.userRepository = userRepository;
@@ -32,6 +37,7 @@ namespace AutoKat.Infrastructure.Users
 			this.authenticationService = authenticationService;
 			this.httpContextService = httpContextService;
 			this.sessionRepository = sessionRepository;
+			this.dateTimeProvider = dateTimeProvider;
 		}
 
 		public async Task<User> GetCurrentUser(bool throwIfNone = true)
@@ -48,17 +54,6 @@ namespace AutoKat.Infrastructure.Users
 			}
 
 			return null;
-		}
-
-		public async Task<UserInformationResult> GetCurrentUserInformation()
-		{
-			var user = await this.GetCurrentUser();
-
-			return new UserInformationResult
-			{
-				Success = true,
-				Token = this.httpContextService.GetToken()
-			};
 		}
 
 		public async Task<UserPreferences> GetCurrentUserPreferences()
@@ -81,18 +76,34 @@ namespace AutoKat.Infrastructure.Users
 				return new UserLoginResult(AuthenticationTranslations.EmailOrPasswordIncorrect);
 			}
 
-			var authData = this.authenticationService.GetAuthenticationData(user.Email);
+			var authData = await this.GetTokens(user);
+			return new UserLoginResult(authData);
+		}
+
+		private async Task<AuthenticationData> GetTokens(User user)
+		{
+			var refreshToken = this.authenticationService.GetAuthenticationData(user, null);
+			var token = this.authenticationService.GetAuthenticationData(user, refreshToken.Token);
+			token.RefreshToken = refreshToken.Token;
 
 			var ip = this.httpContextService.GetCurrentUserIpAddress();
-			await this.sessionRepository.StartNewSession(user, authData.Token, ip, this.authenticationService.JwtLifespan);
+			var now = this.dateTimeProvider.NowUtc;
+			var duration = DateTimeOffset.FromUnixTimeSeconds(refreshToken.TokenExpirationTime).UtcDateTime - now;
+			await this.sessionRepository.StartNewSession(user, refreshToken.Token, ip, duration.TotalSeconds);
 
-			return new UserLoginResult(authData);
+			return new AuthenticationData
+			{
+				Token = token.Token,
+				Id = token.Id,
+				TokenExpirationTime = token.TokenExpirationTime,
+				RefreshToken = refreshToken.Token
+			};
 		}
 
 		public async Task LogoutUser()
 		{
 			var user = await this.GetCurrentUser();
-			var token = this.httpContextService.GetToken();
+			var token = this.httpContextService.GetCookieRefreshToken();
 			var ip = this.httpContextService.GetCurrentUserIpAddress();
 
 			await this.sessionRepository.EndActiveSession(user, token, ip);
@@ -121,9 +132,12 @@ namespace AutoKat.Infrastructure.Users
 				Preferences = new UserPreferences()
 			});
 
-			var authData = this.authenticationService.GetAuthenticationData(user.Email);
+			return new UserRegistrationResult();
+		}
 
-			return new UserRegistrationResult(authData);
+		public Task<UserInformationResult> GetCurrentUserInformation()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

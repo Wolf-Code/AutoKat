@@ -1,4 +1,6 @@
-﻿namespace AutoKat.Domain.Users
+﻿using AutoKat.Domain.Authentication;
+
+namespace AutoKat.Domain.Users
 {
 	public class UserLoginResult
 	{
@@ -7,7 +9,7 @@
 			this.Information = information;
 		}
 
-		public UserLoginResult(UserAuthenticationData authenticationData)
+		public UserLoginResult(AuthenticationData authenticationData)
 		{
 			this.Success = true;
 			this.AuthenticationData = authenticationData;
@@ -17,6 +19,6 @@
 
 		public string Information { get; set; }
 
-		public UserAuthenticationData AuthenticationData { get; set; }
+		public AuthenticationData AuthenticationData { get; set; }
 	}
 }

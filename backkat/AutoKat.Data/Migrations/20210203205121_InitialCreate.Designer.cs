@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AutoKat.Data.Migrations
 {
     [DbContext(typeof(AutoKatContext))]
-    [Migration("20210201212306_InitialCreate")]
+    [Migration("20210203205121_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,12 +29,48 @@ namespace AutoKat.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("MacAddress")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Device");
+                });
+
+            modelBuilder.Entity("AutoKat.Data.Feedings.Entities.Feeding", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("AmountAfter")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("AmountBefore")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid?>("DeviceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("FeedingEnd")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("FeedingStart")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("Feeding");
                 });
 
             modelBuilder.Entity("AutoKat.Data.Logging.Entities.LogEntry", b =>
@@ -69,6 +105,9 @@ namespace AutoKat.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("DeviceId")
+                        .HasColumnType("uuid");
+
                     b.Property<IPAddress>("IP")
                         .IsRequired()
                         .HasColumnType("inet");
@@ -87,6 +126,8 @@ namespace AutoKat.Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
 
                     b.HasIndex("UserId");
 
@@ -121,6 +162,24 @@ namespace AutoKat.Data.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("AutoKat.Data.Devices.Entities.Device", b =>
+                {
+                    b.HasOne("AutoKat.Data.Users.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AutoKat.Data.Feedings.Entities.Feeding", b =>
+                {
+                    b.HasOne("AutoKat.Data.Devices.Entities.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId");
+
+                    b.Navigation("Device");
+                });
+
             modelBuilder.Entity("AutoKat.Data.Logging.Entities.LogEntry", b =>
                 {
                     b.HasOne("AutoKat.Data.Devices.Entities.Device", "Device")
@@ -132,9 +191,15 @@ namespace AutoKat.Data.Migrations
 
             modelBuilder.Entity("AutoKat.Data.Sessions.Entities.Session", b =>
                 {
+                    b.HasOne("AutoKat.Data.Devices.Entities.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId");
+
                     b.HasOne("AutoKat.Data.Users.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Device");
 
                     b.Navigation("User");
                 });

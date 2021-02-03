@@ -13,6 +13,7 @@ export default () => {
         const requestHeaders: HeadersInit = new Headers()
         requestHeaders.set('Content-Type', 'application/json')
 
+        console.log(authenticationAtom)
         if(signedIn) {
             requestHeaders.set('Authorization', `Bearer ${ authenticationAtom.token }`)
         }

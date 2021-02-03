@@ -14,6 +14,13 @@ namespace AutoKat.Data
 			this.autoKatContext = autoKatContext;
 		}
 
+		public async Task Delete(TEntity entity)
+		{
+			this.autoKatContext.Remove(entity);
+
+			await this.autoKatContext.SaveChangesAsync();
+		}
+
 		public async Task<TEntity> FindById(object id, bool throwIfNotFound = true)
 		{
 			var result = await this.autoKatContext.FindAsync<TEntity>(id);

@@ -7,16 +7,13 @@
 			this.Information = error;
 		}
 
-		public UserRegistrationResult(UserAuthenticationData authenticationData)
+		public UserRegistrationResult()
 		{
-			this.AuthenticationData = authenticationData;
 			this.Success = true;
 		}
 
 		public bool Success { get; set; }
 
 		public string Information { get; set; }
-
-		public UserAuthenticationData AuthenticationData { get; set; }
 	}
 }
