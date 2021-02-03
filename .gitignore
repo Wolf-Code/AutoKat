@@ -106,3 +106,4 @@ dist
 appsettings.*.json
 **/bin
 **/obj
+backkat/AutoKat/.vs
