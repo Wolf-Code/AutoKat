@@ -3,7 +3,7 @@
 
 #define MotorInterfaceType 8
 // Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
-AccelStepper Feeder::stepper(MotorInterfaceType, D7, D5, D8, D0);
+AccelStepper Feeder::stepper(MotorInterfaceType, 16, 17, 18, 19);
 
 void Feeder::rotate()
 {

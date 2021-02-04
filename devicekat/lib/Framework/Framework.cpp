@@ -40,7 +40,8 @@ void startNormally()
 void Framework::initialize(FrameworkInitializeCallback callback)
 {
 	Serial.begin(9600);
-	StorageHelper::initialize();
+	Serial.println("Initializing");
+
 	TimerHelper::initialize();
 	WiFi.mode(WIFI_STA);
 	WifiAccess::scanNetworks();
@@ -50,7 +51,7 @@ void Framework::initialize(FrameworkInitializeCallback callback)
 	}, true);
 
 	Feeder::initialize();
-	Scale::initialize();
+	// Scale::initialize();
 
 	if (!StorageHelper::hasDataBeenWritten())
 	{

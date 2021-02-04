@@ -1,5 +1,5 @@
 #include "WifiAccess.h"
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 #include <Logger.h>
 #include <StorageHelper.h>
 #include <StorageData.h>
@@ -32,7 +32,7 @@ String createMacAddressString()
 
 bool WifiAccess::connect(const String &ssid, const String &password)
 {
-	WiFi.begin(ssid, password);
+	WiFi.begin(ssid.c_str(), password.c_str());
 
 	int attempts = 0;
 	while (!WifiAccess::isConnected() && WiFi.status() != WL_CONNECT_FAILED)
@@ -68,7 +68,7 @@ void WifiAccess::disconnect()
 
 void WifiAccess::startAsSoftAP()
 {
-	if (WiFi.softAP(F("AutoKat"), F("AutoKat123")))
+	if (WiFi.softAP("AutoKat", "AutoKat123"))
 	{
 		isAP = true;
 		Serial.println(F("AP started"));
@@ -88,6 +88,11 @@ bool WifiAccess::isConnected()
 String WifiAccess::getMacAddress()
 {
 	return WifiAccess::macAddress;
+}
+
+IPAddress WifiAccess::getSoftApIp()
+{
+	return WiFi.softAPIP();
 }
 
 bool WifiAccess::isSoftAP()

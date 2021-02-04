@@ -5,10 +5,10 @@ HX711 Scale::scale;
 long Scale::lastMeasure;
 
 // GPIO0
-#define DOUT D3
+#define DOUT 3
 
 // GPIO12
-#define CLK D6
+#define CLK 6
 
 #define OFFSET 55590;
 #define DIVIDER 976;

@@ -3,6 +3,7 @@
 
 #include <WString.h>
 #include <WifiNetwork.h>
+#include <WiFi.h>
 
 class WifiAccess
 {
@@ -14,6 +15,7 @@ class WifiAccess
 		static void disconnect();
 		static void startAsSoftAP();
 		static void stopSoftAP();
+		static IPAddress getSoftApIp();
 		static String getMacAddress();
 		static void scanNetworks();
 		static unsigned int getNetworksCount();

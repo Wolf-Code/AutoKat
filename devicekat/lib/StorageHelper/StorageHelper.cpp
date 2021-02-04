@@ -1,11 +1,25 @@
-#include <EEPROM.h>
+#ifdef ESP8266
+	#include <EEPROM.h>
+#endif
+
+#ifdef ESP32
+	#include <Preferences.h>
+#endif
+#include <Constants.h>
 #include "StorageHelper.h"
 
 StorageData StorageHelper::data;
+Preferences StorageHelper::preferences;
+#ifdef ESP32
+	const char* PREFERENCES_WIFI = "PREFERENCES_WIFI";
+#endif
 
-void StorageHelper::initialize()
+void StorageHelper::initialize(Preferences preferences)
 {
-	EEPROM.begin(1024);
+	StorageHelper::preferences = preferences;
+	#ifdef ESP8266
+		EEPROM.begin(1024);
+	#endif
 
 	if (!hasDataBeenWritten())
 	{
@@ -19,15 +33,31 @@ void StorageHelper::reloadFromEEPROM()
 {
 	if (!hasDataBeenWritten())
 	{
+		Serial.println("No configuration stored");
 		return;
 	}
 
-	unsigned int index = 0;
-	data.serverUrl = readString(index);
-	data.wifiSSID = readString(index);
-	data.wifiPassword = readString(index);
+	#ifdef ESP8266
+		unsigned int index = 0;
+		data.serverUrl = readString(index);
+		data.wifiSSID = readString(index);
+		data.wifiPassword = readString(index);
+	#endif
+
+	#ifdef ESP32
+		StorageHelper::preferences.begin(PREFERENCES_WIFI, true);
+		data.serverUrl = StorageHelper::preferences.getString("Url");
+		data.wifiSSID = StorageHelper::preferences.getString("SSID");
+		data.wifiPassword = StorageHelper::preferences.getString("Password");
+		StorageHelper::preferences.end();
+	#endif
+
+	Serial.println(data.serverUrl);
+	Serial.println(data.wifiSSID);
+	Serial.println(data.wifiPassword);
 }
 
+#ifdef ESP8266
 String StorageHelper::readString(unsigned int &index)
 {
 	unsigned int lengths[2];
@@ -77,14 +107,26 @@ void StorageHelper::writeLength(unsigned int &index, unsigned int length)
 	EEPROM.put(index, length);
 	index += sizeof(unsigned int);
 }
+#endif
 
 void StorageHelper::saveStorageData(StorageData &data)
 {
-	unsigned int index = 0;
-	writeString(index, data.serverUrl);
-	writeString(index, data.wifiSSID);
-	writeString(index, data.wifiPassword);
-	EEPROM.commit();
+	#ifdef ESP8266
+		unsigned int index = 0;
+		writeString(index, data.serverUrl);
+		writeString(index, data.wifiSSID);
+		writeString(index, data.wifiPassword);
+		EEPROM.commit();
+	#endif
+
+	#ifdef ESP32
+		StorageHelper::preferences.begin(PREFERENCES_WIFI, false);
+		StorageHelper::preferences.putString("Url", data.serverUrl);
+		StorageHelper::preferences.putString("SSID", data.wifiSSID);
+		StorageHelper::preferences.putString("Password", data.wifiPassword);
+		StorageHelper::preferences.putBool("Written", true);
+		StorageHelper::preferences.end();
+	#endif
 
 	StorageHelper::data = data;
 }
@@ -96,9 +138,19 @@ StorageData StorageHelper::getStorageData()
 
 bool StorageHelper::hasDataBeenWritten()
 {
-	unsigned int index = 0;
-	unsigned int lengths[2];
-	readLengths(index, lengths);
+	#ifdef ESP8266
+		unsigned int index = 0;
+		unsigned int lengths[2];
+		readLengths(index, lengths);
 
-	return lengths[0] == lengths[1];
+		return lengths[0] == lengths[1];
+	#endif
+
+	#ifdef ESP32
+		StorageHelper::preferences.begin(PREFERENCES_WIFI, true);
+		const bool isWritten = StorageHelper::preferences.getBool("Written", false);
+		StorageHelper::preferences.end();
+
+		return isWritten;
+	#endif
 }

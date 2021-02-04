@@ -1,5 +1,5 @@
 #include "RequestsHelper.h"
-#include <ESP8266HTTPClient.h>
+#include <HTTPClient.h>
 #include <Arduino.h>
 #include <Logger.h>
 #include <ArduinoJson.h>

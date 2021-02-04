@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-typedef std::function<bool(void)> TimerCallback;
+typedef bool (* TimerCallback) ();
 
 class Timer
 {

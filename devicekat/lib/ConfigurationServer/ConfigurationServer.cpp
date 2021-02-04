@@ -4,7 +4,6 @@
 #include <StorageHelper.h>
 #include <StorageData.h>
 #include <DeviceHelper.h>
-#include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 
@@ -68,7 +67,7 @@ void ConfigurationServer::start()
 	server.begin();
 	if (WifiAccess::isSoftAP())
 	{
-		dnsServer.start(dnsPort, "*", WiFi.softAPIP());
+		dnsServer.start(dnsPort, "*", WifiAccess::getSoftApIp());
 	}
 	Logger::debugLine("Starting configuration server");
 }

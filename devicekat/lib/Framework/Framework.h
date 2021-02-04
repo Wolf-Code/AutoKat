@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-typedef std::function<void(void)> FrameworkInitializeCallback;
-typedef std::function<void(void)> FrameworkLoopCallback;
+typedef void (* FrameworkInitializeCallback) ();
+typedef void (* FrameworkLoopCallback) ();
 
 class Framework
 {
