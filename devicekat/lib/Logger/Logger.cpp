@@ -52,20 +52,20 @@ void Logger::log(const char* line, const char *level)
 		return;
 	}
 
-	const int capacity = JSON_OBJECT_SIZE(2) + strlen(line) + strlen(level);
-	DynamicJsonDocument object(capacity);
-	object[F("message")] = line;
-	object[F("level")] = level;
+	// const int capacity = JSON_OBJECT_SIZE(2) + strlen(line) + strlen(level);
+	// DynamicJsonDocument object(capacity);
+	// object[F("message")] = line;
+	// object[F("level")] = level;
 
-	const String endpoint = "log/" + Logger::macAddress;
-	const JsonRequestResult result = RequestsHelper::post(endpoint, object);
+	// const String endpoint = "log/" + Logger::macAddress;
+	// const JsonRequestResult result = RequestsHelper::post(endpoint, object);
 
-	if (!result.requestSuccess)
-	{
-		char buffer[200];
-		sprintf(buffer, "ERROR: Failed to log to %s, %s", endpoint.c_str(), result.statusError.c_str());
-		Serial.println(buffer);
-	}
+	// if (!result.requestSuccess)
+	// {
+	// 	char buffer[200];
+	// 	sprintf(buffer, "ERROR: Failed to log to %s, %s", endpoint.c_str(), result.statusError.c_str());
+	// 	Serial.println(buffer);
+	// }
 }
 
 void Logger::waitForInput()

@@ -9,6 +9,8 @@ namespace AutoKat.Infrastructure.HttpContext
 
 		string GetHeaderToken();
 
+		string GetHeaderRefreshToken();
+
 		string GetCurrentUserEmail();
 
 		IPAddress GetCurrentUserIpAddress();

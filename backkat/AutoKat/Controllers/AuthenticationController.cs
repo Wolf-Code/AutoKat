@@ -26,7 +26,7 @@ namespace AutoKat.Controllers
 		{
 			try
 			{
-				var token = this.httpContextService.GetCookieRefreshToken();
+				var token = this.httpContextService.GetCookieRefreshToken() ?? this.httpContextService.GetHeaderRefreshToken(); ;
 				if (string.IsNullOrEmpty(token))
 				{
 					return this.Unauthorized();

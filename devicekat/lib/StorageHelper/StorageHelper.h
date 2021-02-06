@@ -9,7 +9,7 @@ class StorageHelper
 {
 public:
 #ifdef ESP32
-	static void initialize(Preferences preferences);
+	static void initialize(Preferences* preferences);
 #endif
 
 #ifdef ESP8266
@@ -17,14 +17,13 @@ public:
 #endif
 
 	static void saveStorageData(StorageData &data);
-
+	static void reloadFromStorage();
 	static StorageData getStorageData();
-	static void reloadFromEEPROM();
 	static bool hasDataBeenWritten();
 
 private:
 #ifdef ESP32
-	static Preferences preferences;
+	static Preferences* preferences;
 #endif
 	static StorageData data;
 	static String readString(unsigned int &index);

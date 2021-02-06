@@ -1,19 +1,21 @@
 #include "Feeder.h"
 #include <AccelStepper.h>
 
-#define MotorInterfaceType 8
-// Initialize with pin sequence IN1-IN3-IN2-IN4 for using the AccelStepper library with 28BYJ-48 stepper motor:
-AccelStepper Feeder::stepper(MotorInterfaceType, 16, 17, 18, 19);
+#define dirPin 16
+#define stepPin 17
+#define motorInterfaceType 1
+// Create a new instance of the AccelStepper class:
+AccelStepper Feeder::stepper = AccelStepper(motorInterfaceType, stepPin, dirPin);
 
 void Feeder::rotate()
 {
-	Feeder::stepper.move(2038);
+	Feeder::stepper.move(100);
 }
 
 void Feeder::initialize()
 {
-	Feeder::stepper.setMaxSpeed(1000);
-	Feeder::stepper.setAcceleration(400);
+	Feeder::stepper.setMaxSpeed(100);
+	Feeder::stepper.setAcceleration(100);
 }
 
 void Feeder::loop()

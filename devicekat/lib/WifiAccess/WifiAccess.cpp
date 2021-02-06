@@ -52,6 +52,7 @@ bool WifiAccess::connect(const String &ssid, const String &password)
 
 	isAP = false;
 	WifiAccess::macAddress = createMacAddressString();
+	Serial.println(WiFi.localIP().toString());
 	return true;
 }
 

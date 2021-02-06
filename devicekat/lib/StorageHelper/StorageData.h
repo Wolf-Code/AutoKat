@@ -9,6 +9,7 @@ struct StorageData
 		String serverUrl;
 		String wifiSSID;
 		String wifiPassword;
+		String token;
 };
 
 #endif

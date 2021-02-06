@@ -8,6 +8,7 @@ void DeviceHelper::loop()
 {
 	if (shouldRestart)
 	{
+		Serial.println("Restarting");
 		if(WifiAccess::isSoftAP())
 		{
 			WifiAccess::stopSoftAP();

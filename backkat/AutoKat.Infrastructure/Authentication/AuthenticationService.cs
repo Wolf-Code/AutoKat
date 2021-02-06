@@ -95,7 +95,7 @@ namespace AutoKat.Infrastructure.Authentication
 			var handler = new JwtSecurityTokenHandler();
 			var token = handler.ReadJwtToken(refreshToken);
 
-			var mac = token.Claims.First(x => x.Type == "serial").Value;
+			var mac = token.Claims.First(x => x.Type == "certserialnumber").Value;
 			var device = await this.sessionRepository.GetDeviceFromRefreshToken(refreshToken);
 
 			if (device.MacAddress == null || device.MacAddress != mac)

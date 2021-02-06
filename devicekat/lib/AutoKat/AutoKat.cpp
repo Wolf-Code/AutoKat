@@ -7,6 +7,7 @@
 #include <Feeder.h>
 #include <Scale.h>
 #include <Screen.h>
+#include <Bowl.h>
 
 String AutoKat::id;
 String AutoKat::name;
@@ -26,11 +27,21 @@ void AutoKat::initialize()
 	// 	return false;
 	// }, false);
 
-	// TimerHelper::startTimer(15000, [](void){
-	// 	Feeder::rotate();
+	TimerHelper::startTimer(10000, [](void){
+		// if(Bowl::isOpen()) {
+		// 	Bowl::close();
+		// }
+		// else {
+		// 	Bowl::open();
+		// }
+		// Feeder::rotate();
 
-	// 	return false;
-	// }, true);
+		Serial.println("Requesting");
+		JsonRequestResult result(10);
+		RequestsHelper::get("device", result);
+
+		return false;
+	}, false);
 }
 
 void AutoKat::loop()

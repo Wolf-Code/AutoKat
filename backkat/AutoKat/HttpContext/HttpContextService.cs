@@ -37,12 +37,19 @@ namespace AutoKat.HttpContext
 
 		public string GetHeaderToken()
 		{
-			var header = this.httpContextAccessor.HttpContext.Response.Headers["Authorization"].FirstOrDefault();
+			var header = this.httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 			if (!string.IsNullOrEmpty(header))
 			{
 				var bearerLength = "Bearer ".Length;
 				header = header.Substring(bearerLength, header.Length - bearerLength);
 			}
+
+			return header;
+		}
+
+		public string GetHeaderRefreshToken()
+		{
+			var header = this.httpContextAccessor.HttpContext.Request.Headers["RefreshToken"].FirstOrDefault();
 
 			return header;
 		}

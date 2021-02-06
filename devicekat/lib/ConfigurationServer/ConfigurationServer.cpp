@@ -6,6 +6,7 @@
 #include <DeviceHelper.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
+#include <WifiAccess.h>
 
 AsyncWebServer ConfigurationServer::server(80);
 DNSServer ConfigurationServer::dnsServer;
@@ -19,6 +20,8 @@ void ConfigurationServer::start()
 	});
 
 	server.on("/wifi", HTTP_GET, [](AsyncWebServerRequest *request) {
+		WifiAccess::scanNetworks();
+
 		AsyncJsonResponse *response = new AsyncJsonResponse(true);
 
 		JsonVariant &root = response->getRoot();
@@ -41,19 +44,36 @@ void ConfigurationServer::start()
 	server.onRequestBody([](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
 		if (request->url() == "/wifi")
 		{
+			Serial.println("Wifi request received");
 			DynamicJsonDocument json(1024);
 			deserializeJson(json, (const char *)data);
 			const String ssid = json["ssid"];
 			const String password = json["password"];
 
+			Serial.printf("Received %s (%s)\r\n", ssid.c_str(), password.c_str());
 			StorageData storageData = StorageHelper::getStorageData();
 			storageData.wifiSSID = ssid;
 			storageData.wifiPassword = password;
 
 			StorageHelper::saveStorageData(storageData);
+			Serial.println("Stored credentials");
+
 			request->send(200);
 			server.end();
 			DeviceHelper::restart();
+		}
+
+		if(request->url() == "/server")
+		{
+			Serial.println("Server url request received");
+			DynamicJsonDocument json(1024);
+			deserializeJson(json, (const char *)data);
+			const String url = json["url"];
+			Serial.printf("Received %s\r\n", url.c_str());
+
+			StorageData storageData = StorageHelper::getStorageData();
+			storageData.serverUrl = url;
+			StorageHelper::saveStorageData(storageData);
 		}
 	});
 

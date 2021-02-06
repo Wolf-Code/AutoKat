@@ -11,12 +11,14 @@ Preferences preferences;
 void setup()
 {
 	Serial.begin(9600);
-	StorageHelper::initialize(preferences);
+	Serial.println("Setup");
+	preferences.begin("WIFI");
+	StorageHelper::initialize(&preferences);
 
 	Framework::initialize(AutoKat::initialize);
 }
 
 void loop()
 {
-	// Framework::loop(AutoKat::loop);
+	Framework::loop(AutoKat::loop);
 }

@@ -39,16 +39,11 @@ void startNormally()
 
 void Framework::initialize(FrameworkInitializeCallback callback)
 {
-	Serial.begin(9600);
 	Serial.println("Initializing");
 
 	TimerHelper::initialize();
 	WiFi.mode(WIFI_STA);
 	WifiAccess::scanNetworks();
-	TimerHelper::startTimer(30000, []() {
-		WifiAccess::scanNetworks();
-		return false;
-	}, true);
 
 	Feeder::initialize();
 	// Scale::initialize();
