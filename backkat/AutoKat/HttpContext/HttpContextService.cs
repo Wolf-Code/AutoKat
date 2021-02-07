@@ -1,5 +1,5 @@
-﻿using AutoKat.Domain.Authentication;
-using AutoKat.Infrastructure.HttpContext;
+﻿using AutoKat.Core.Authentication;
+using AutoKat.Services.HttpContext;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Net;

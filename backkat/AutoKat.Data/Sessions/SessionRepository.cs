@@ -1,7 +1,7 @@
-﻿using AutoKat.Core.Utilities.DateTime;
-using AutoKat.Data.Devices.Entities;
-using AutoKat.Data.Sessions.Entities;
-using AutoKat.Data.Users.Entities;
+﻿using AutoKat.Core.Devices;
+using AutoKat.Core.Sessions;
+using AutoKat.Core.Users;
+using AutoKat.Core.Utilities.DateTime;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net;

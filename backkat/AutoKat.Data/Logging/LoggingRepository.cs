@@ -1,4 +1,4 @@
-﻿using AutoKat.Data.Logging.Entities;
+﻿using AutoKat.Core.Logging;
 
 namespace AutoKat.Data.Logging
 {

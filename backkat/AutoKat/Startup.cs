@@ -1,9 +1,9 @@
 using AutoKat.Core.DependencyInjection;
+using AutoKat.Core.Sessions;
 using AutoKat.Core.Utilities.DateTime;
 using AutoKat.Data;
-using AutoKat.Data.Sessions;
-using AutoKat.Infrastructure.Authentication;
-using AutoKat.Infrastructure.HttpContext;
+using AutoKat.Services.Authentication;
+using AutoKat.Services.HttpContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

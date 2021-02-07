@@ -1,4 +1,4 @@
-﻿using AutoKat.Data.Feedings.Entities;
+﻿using AutoKat.Core.Feedings;
 
 namespace AutoKat.Data.Feedings
 {

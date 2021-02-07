@@ -1,4 +1,9 @@
-﻿using AutoKat.Data.Devices.Entities;
+﻿using AutoKat.Core;
+using AutoKat.Core.Devices;
+using AutoKat.Data.Devices;
+using AutoKat.Data.Feedings;
+using AutoKat.Data.Sessions;
+using AutoKat.Data.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -29,11 +34,10 @@ namespace AutoKat.Data
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			foreach (var type in EntityTypes)
-			{
-				modelBuilder.Entity(type);
-			}
-
+			modelBuilder.ApplyConfiguration(new DeviceMapping());
+			modelBuilder.ApplyConfiguration(new FeedingMapping());
+			modelBuilder.ApplyConfiguration(new SessionMapping());
+			modelBuilder.ApplyConfiguration(new UserMapping());
 
 			var dateTimeConverter = new ValueConverter<DateTime, DateTime>(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 

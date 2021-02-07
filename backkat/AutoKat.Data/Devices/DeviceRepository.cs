@@ -1,4 +1,4 @@
-﻿using AutoKat.Data.Devices.Entities;
+﻿using AutoKat.Core.Devices;
 
 namespace AutoKat.Data.Devices
 {

@@ -4,4 +4,37 @@
 	<TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Update="Translations\AccountTranslations.Designer.cs">
+      <DependentUpon>AccountTranslations.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Translations\AuthenticationTranslations.Designer.cs">
+      <DependentUpon>AuthenticationTranslations.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Translations\HomeTranslations.Designer.cs">
+      <DependentUpon>HomeTranslations.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Translations\AccountTranslations.resx">
+      <LastGenOutput>AccountTranslations.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Translations\AuthenticationTranslations.resx">
+      <LastGenOutput>AuthenticationTranslations.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Translations\HomeTranslations.resx">
+      <LastGenOutput>HomeTranslations.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

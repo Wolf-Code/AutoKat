@@ -9,9 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoKat.Data", "..\AutoKat.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoKat.Core", "..\AutoKat.Core\AutoKat.Core.csproj", "{EEF9A852-29BD-4ADC-99F9-0FB712F26F15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoKat.Domain", "..\AutoKat.Domain\AutoKat.Domain.csproj", "{812ED12A-5500-452B-9566-35FEE1E6C4F9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoKat.Infrastructure", "..\AutoKat.Infrastructure\AutoKat.Infrastructure.csproj", "{96CD671F-AAA6-405F-9035-6031CDB4CCFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoKat.Services", "..\AutoKat.Services\AutoKat.Services.csproj", "{96CD671F-AAA6-405F-9035-6031CDB4CCFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +29,6 @@ Global
 		{EEF9A852-29BD-4ADC-99F9-0FB712F26F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEF9A852-29BD-4ADC-99F9-0FB712F26F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEF9A852-29BD-4ADC-99F9-0FB712F26F15}.Release|Any CPU.Build.0 = Release|Any CPU
-		{812ED12A-5500-452B-9566-35FEE1E6C4F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{812ED12A-5500-452B-9566-35FEE1E6C4F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{812ED12A-5500-452B-9566-35FEE1E6C4F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{812ED12A-5500-452B-9566-35FEE1E6C4F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{96CD671F-AAA6-405F-9035-6031CDB4CCFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{96CD671F-AAA6-405F-9035-6031CDB4CCFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96CD671F-AAA6-405F-9035-6031CDB4CCFD}.Release|Any CPU.ActiveCfg = Release|Any CPU

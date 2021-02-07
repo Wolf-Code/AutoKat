@@ -1,4 +1,5 @@
-﻿using AutoKat.Data.Exceptions;
+﻿using AutoKat.Core;
+using AutoKat.Data.Exceptions;
 using System.Linq;
 using System.Threading.Tasks;
 
